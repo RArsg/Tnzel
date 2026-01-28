@@ -337,6 +337,13 @@ UniversalTab:AddButton({
     loadstring(game:HttpGet("https://raw.githubusercontent.com/n0kc/AtomicHub/main/Map-Al-Biout.lua"))()
   end,
 })
+UniversalTab:AddButton({
+  Name = "مضاد فلنق",
+  Callback = function()
+    -- line: [0, 0] id: 120
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-anti-fling-ig-2-51386"))()
+  end,
+})
 
 UniversalTab:AddButton({
   Name = "سكربـت طـيـران السيارة",
