@@ -7090,3 +7090,25 @@ function startAutoUnban()
 end
 
 Tab = Window:MakeTab({"االمضادات","rbxassetid://76904531459920"})
+
+-- Seção para Auto Unban
+pcall(function()
+    HouseTab:AddSection({ Name = "مضاد باند" })
+end)
+
+-- Toggle para Auto Unban
+pcall(function()
+    HouseTab:AddToggle({
+        Name = "مضاد باند",
+        Default = false,
+        Callback = function(state)
+            isUnbanActive = state
+            if isUnbanActive then
+                print("Auto Unban Activated")
+                spawn(startAutoUnban)
+            else
+                print("Auto Unban Deactivated")
+            end
+        end
+    })
+end)
