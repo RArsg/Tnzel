@@ -403,7 +403,6 @@ UniversalTab:AddButton({
    end
 })
 
-
 UniversalTab:AddButton({
    Name = "سـكـربـت حـضـن",
    Callback = function()
@@ -412,6 +411,7 @@ UniversalTab:AddButton({
 })
 
 local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
+
 
 
 TrollTab:AddSection({ "ثقب اسود" })
