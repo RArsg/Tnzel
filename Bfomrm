@@ -198,7 +198,7 @@ wait(0.25);
 v5:Destroy();
 
 local Sound = Instance.new("Sound", game:GetService("SoundService"));
-Sound.SoundId = "rbxassetid://108443140007873";
+Sound.SoundId = "rbxassetid://1";
 Sound:Play();
 
 game.Players.LocalPlayer.Character.Humanoid.Health = 100
@@ -338,7 +338,6 @@ UniversalTab:AddButton({
   end,
 })
 
-
 UniversalTab:AddButton({
   Name = "سكربـت طـيـران السيارة",
   Callback = function()
@@ -364,7 +363,7 @@ UniversalTab:AddButton({
 })
 
 -- Botão para TP Tool
-UniversalTab:AddBtton({
+UniversalTab:AddButton({
     Name = "اداة انتقال",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/err0r129/KptHadesBlair/main/Bao.lua"))()
@@ -403,6 +402,7 @@ UniversalTab:AddButton({
    end
 })
 
+
 UniversalTab:AddButton({
    Name = "سـكـربـت حـضـن",
    Callback = function()
@@ -411,7 +411,6 @@ UniversalTab:AddButton({
 })
 
 local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
-
 
 
 TrollTab:AddSection({ "ثقب اسود" })
