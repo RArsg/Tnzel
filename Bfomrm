@@ -410,7 +410,6 @@ UniversalTab:AddButton({
        loadstring(game:HttpGet("https://raw.githubusercontent.com/martinng5/martin/refs/heads/main/martin.lua.txt"))()
    end
 })
-
 local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
 
 
