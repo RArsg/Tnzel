@@ -338,13 +338,6 @@ UniversalTab:AddButton({
   end,
 })
 
-UniversalTab:AddButton({
-  Name = "مضاد فلنق",
-  Callback = function()
-    Callback = function()
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-anti-fling-ig-2-51386"))()
-  end,
-})
 
 UniversalTab:AddButton({
   Name = "سكربـت طـيـران السيارة",
@@ -371,7 +364,7 @@ UniversalTab:AddButton({
 })
 
 -- Botão para TP Tool
-UniversalTab:AddButton({
+UniversalTab:AddBtton({
     Name = "اداة انتقال",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/err0r129/KptHadesBlair/main/Bao.lua"))()
@@ -407,6 +400,14 @@ UniversalTab:AddButton({
    Name = "سـكربـت ضـرب  +18",
    Callback = function()
        loadstring(game:HttpGet("https://pastefy.app/YZoglOyJ/raw"))()
+   end
+})
+
+
+UniversalTab:AddButton({
+   Name = "سـكـربـت حـضـن",
+   Callback = function()
+       loadstring(game:HttpGet("https://raw.githubusercontent.com/martinng5/martin/refs/heads/main/martin.lua.txt"))()
    end
 })
 
