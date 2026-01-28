@@ -7091,7 +7091,6 @@ end
 
 Tab = Window:MakeTab({"االمضادات","rbxassetid://76904531459920"})
 
--- Seção para Auto Unban
 pcall(function()
     HouseTab:AddSection({ Name = "مضاد باند" })
 end)
