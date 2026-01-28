@@ -341,7 +341,7 @@ UniversalTab:AddButton({
 UniversalTab:AddButton({
   Name = "مضاد فلنق",
   Callback = function()
-    -- line: [0, 0] id: 120
+    Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-anti-fling-ig-2-51386"))()
   end,
 })
