@@ -411,8 +411,6 @@ UniversalTab:AddButton({
    end
 })
 
-
-
 local TrollTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
 
 
