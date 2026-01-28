@@ -7089,7 +7089,4 @@ function startAutoUnban()
     end
 end
 
--- Inicializa a lista de players
-updatePlayerList()
-
 Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
