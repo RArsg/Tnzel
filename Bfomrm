@@ -7143,4 +7143,4 @@ local function ميزة_سبام_الايموجي()
         game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(ايموجي, "All")
         wait(0.2)
     end
-end
+end})
