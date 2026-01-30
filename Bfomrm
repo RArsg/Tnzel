@@ -7090,9 +7090,3 @@ function startAutoUnban()
 end
 
 Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
-
-
--- Label após Casa RGB
-pcall(function()
-    HouseTab:AddLabel("جعل منزلك ملون")
-end)
