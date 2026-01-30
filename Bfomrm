@@ -7090,5 +7090,57 @@ function startAutoUnban()
 end
 
 Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
+local function ميزة_السبام_الكلام()
+    -- ميزة سبام الكلام
+    local الكلام = {
+        "مرحبا!",
+        "هذا سبام",
+        "lol",
+        "😂",
+        "تابعني",
+        "شكرا",
+        "واو",
+        "مذهل!",
+        "روبلوكس",
+        "هاها"
+    }
+    
+    local التكرار = 10 -- عدد المرات
+    local التأخير = 0.5 -- ثانية بين كل رسالة
+    
+    for i = 1, التكرار do
+        local رسالة = الكلام[math.random(1, #الكلام)]
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(رسالة, "All")
+        wait(التأخير)
+    end
+end
 
-local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://10723415903" })
+local function ميزة_الازعاج_الصوتي()
+    -- ميزة تشغيل أصوات مزعجة
+    local اصوات = {
+        184924669, -- صوت انذار
+        911782837, -- صوت صفارة
+        276709213, -- صوت ضحكة
+        598297143, -- صوت صراخ
+    }
+    
+    for _, id in pairs(اصوات) do
+        local صوت = Instance.new("Sound")
+        صوت.SoundId = "rbxassetid://" .. id
+        صوت.Parent = workspace
+        صوت:Play()
+        wait(1)
+        صوت:Destroy()
+    end
+end
+
+local function ميزة_سبام_الايموجي()
+    -- ميزة إرسال إيموجيات
+    local ايموجي = "😂"
+    local التكرار = 20
+    
+    for i = 1, التكرار do
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(ايموجي, "All")
+        wait(0.2)
+    end
+end
