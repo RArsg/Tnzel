@@ -7091,13 +7091,4 @@ end
 
 Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
 
-local r78_0 = AddSection(r77_0, {
-  "�ـكـربـتـات لـ صـمـلاويـن تـفـيـدكـم : "
-})
-AddButton(r77_0, {
-  Name = "- سـكـربـت - Infinite Yield -",
-  Callback = function()
-    -- line: [0, 0] id: 241
-    loadstring(game:HttpGet("https://scriptblox.com/raw/Infinite-Yield_500"))()
-  end,
-})
+local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://10723415903" })
