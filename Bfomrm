@@ -7090,4 +7090,3 @@ function startAutoUnban()
 end
 
 Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
-local function ميزة_السبام_الكلام()
