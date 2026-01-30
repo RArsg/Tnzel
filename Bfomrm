@@ -7089,7 +7089,3 @@ function startAutoUnban()
     end
 end
 Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
-TrollTab:AddSection({ "ثقب اسود" })
-TrollTab:AddButton({
-    Name = "V2(هالة ابواب💥)",
-end)
