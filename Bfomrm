@@ -7088,4 +7088,6 @@ function startAutoUnban()
         task.wait(1)
     end
 end
+
 Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
+
