@@ -1,6 +1,6 @@
 --TS7 was here.
 -- ////////////
-shared.LoaderTitle = "GOLDEN RAW  HUB";
+shared.LoaderTitle = "Everlast  HUB";
 shared.LoaderKeyFrames = {
     [1] = {
         2,
@@ -204,7 +204,7 @@ Sound:Play();
 game.Players.LocalPlayer.Character.Humanoid.Health = 100
 wait(0.1)
 game.StarterGui:SetCore("SendNotification", {
-    Title = "GOLDEN RAW ";
+    Title = "Everlast ";
     Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
     Duration = 5;
 })
@@ -219,7 +219,7 @@ game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eCo
 
 local args = {
     [1] = "RolePlayBio",
-    [2] ="  | GOLDEN RAW      HUB  |  "
+    [2] ="  | Everlast      HUB  |  "
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
@@ -231,7 +231,7 @@ local args = {
 
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/DBLACKh/refs/heads/main/Dblack"))()
 local Window = redzlib:MakeWindow({
-    Title = "  GOLDEN RAW HUB",
+    Title = "  Everlast HUB",
     SubTitle ="                           |  1.9V",
     SaveFolder = "قيد التطوير"
 })
@@ -248,7 +248,7 @@ Window:AddMinimizeButton({
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/DBLACKh/refs/heads/main/Dblack"))()
 
 local Window = redzlib:MakeWindow({
-    Title = "GOLDEN RAW HUB",
+    Title = "Everlast HUB",
     SubTitle = "                       |  1.9V",
     SaveFolder = "قيد التطوير"
 })
@@ -264,7 +264,7 @@ Window:AddMinimizeButton({
 })
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/DBLACKh/refs/heads/main/Dblack"))()
 local Window = redzlib:MakeWindow({
-    Title = "GOLDEN RAW HUB",
+    Title = "Everlast HUB",
     SubTitle = "                       |  1.2V",
     SaveFolder = "قيد التطوير"
 })
@@ -291,7 +291,7 @@ InfoTab:AddDiscordInvite({
 InfoTab:AddSection({ "معلومات السكربت" })
 InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK (" })
 InfoTab:AddParagraph({ "فريق:", "R, المطور DBLACK" })
-InfoTab:AddParagraph({ ":", "GOLDEN RAW HUB " })
+InfoTab:AddParagraph({ ":", "Everlast HUB " })
 InfoTab:AddParagraph({"عمل تجريبي سيتم تطويره"})
 InfoTab:AddParagraph({"اضافات:", "مميزات قوية مثل فلنق الادمن"})
 InfoTab:AddButton({": ", function()
