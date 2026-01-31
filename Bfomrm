@@ -7089,5 +7089,6 @@ function startAutoUnban()
     end
 end
 
-Tab = Window:MakeTab({"السبامات و الازعاج","rbxassetid://114769879906735"})
-local Section = Tab:NewSection("قيد تطوير")
+local Tab = Window:NewTab("مضادات")
+local Section = Tab:NewSection("تفعيل")
+
