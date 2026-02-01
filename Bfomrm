@@ -331,10 +331,10 @@ UniversalTab:AddButton({
 })
 
 UniversalTab:AddButton({
-  Name = "سكربـت شصاد",
+  Name = "سكربـت مضاد بانج",
   Callback = function()
     -- line: [0, 0] id: 34
-    loadstring(game:HttpGet("https://scriptblox.com/raw/Baseplate-Fe-All-Emote-7386"))()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
   end,
 })
 
