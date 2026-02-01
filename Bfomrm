@@ -322,14 +322,6 @@ UniversalTab:AddButton({
     end
 })
 
--- Botão para ShiftLock
-UniversalTab:AddButton({
-    Name = " سكربت مضاد بانج",
-    Callback = function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()"))()
-    end
-})
-
 UniversalTab:AddButton({
   Name = "سكربـت الـرقـصـات",
   Callback = function()
