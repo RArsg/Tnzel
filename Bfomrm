@@ -322,6 +322,7 @@ UniversalTab:AddButton({
     end
 })
 
+
 UniversalTab:AddButton({
   Name = "سكربـت الـرقـصـات",
   Callback = function()
