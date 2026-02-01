@@ -331,9 +331,8 @@ UniversalTab:AddButton({
 })
 
 UniversalTab:AddButton({
-  Name = "سكربـت مضاد بانج",
+  Name = "سكربت مضاد بانج",
   Callback = function()
-    -- line: [0, 0] id: 34
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
   end,
 })
