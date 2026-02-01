@@ -345,6 +345,13 @@ UniversalTab:AddButton({
 })
 
 UniversalTab:AddButton({
+  Name = "مضاد فلنق",
+  Callback = function()
+    loadstring(game:HttpGet("https://pastebin.com/v8EHHqa5"))()
+  end,
+})
+
+UniversalTab:AddButton({
   Name = "سكربـت الـرحـمة",
   Callback = function()
     -- line: [0, 0] id: 120
