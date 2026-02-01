@@ -338,6 +338,13 @@ UniversalTab:AddButton({
 })
 
 UniversalTab:AddButton({
+  Name = "سكربت FE من صنع DBLACK",
+  Callback = function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/Vj8u7Cg7"))()
+  end,
+})
+
+UniversalTab:AddButton({
   Name = "سكربـت الـرحـمة",
   Callback = function()
     -- line: [0, 0] id: 120
