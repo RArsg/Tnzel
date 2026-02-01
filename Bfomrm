@@ -198,7 +198,7 @@ wait(0.25);
 v5:Destroy();
 
 local Sound = Instance.new("Sound", game:GetService("SoundService"));
-Sound.SoundId = "rbxassetid://1";
+Sound.SoundId = "rbxassetid://82845990304289";
 Sound:Play();
 
 game.Players.LocalPlayer.Character.Humanoid.Health = 100
@@ -208,11 +208,11 @@ game.StarterGui:SetCore("SendNotification", {
     Text = "-شڪراً على الانتضار-"; -- ARAB TEAM
     Duration = 5;
 })
-game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "  | GOLDEN RAW       HUB  |  ")
+game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "  | Everlast       HUB  |  ")
 
 local args = {
     [1] = "PickingRPNameColor",
-    [2] = Color3.fromRGB(255, 215, 0), -- Amarelo
+    [2] = Color3.fromRGB(127, 255, 0), -- Amarelo
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
@@ -238,7 +238,7 @@ local Window = redzlib:MakeWindow({
 
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxassetid://101953571751975",
+        Image = "rbxassetid://113646902595327",
         BackgroundTransparency = 15
     },
     Corner = {
@@ -255,7 +255,7 @@ local Window = redzlib:MakeWindow({
 
 Window:AddMinimizeButton({
     Button = {
-        Image = "rbxassetid://101953571751975",
+        Image = "rbxassetid://113646902595327",
         BackgroundTransparency = 15
     },
     Corner = {
@@ -279,13 +279,13 @@ Window:AddMinimizeButton({
     }
 })
 
-local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://10723415903" })
+local InfoTab = Window:MakeTab({ Title = "حـقوق", Icon = "rbxassetid://113646902595327" })
 
 
 InfoTab:AddDiscordInvite({
     Name = " مـطور DBLACK",
     Description = "تليجرام",
-    Logo = "rbxassetid://101953571751975",
+    Logo = "rbxassetid://113646902595327",
     Invite = "https://t.me/dblack9920",
 })
 InfoTab:AddSection({ "معلومات السكربت" })
