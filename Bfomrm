@@ -905,9 +905,9 @@ Callback = function()
     [1] = {
         [1] = 12875433848,
         [2] = 7963401282,
-        [3] = 5803963959,
-        [4] = 12207771519,
-        [5] = 12134251828,
+        [3] = 0,
+        [4] = 0,
+        [5] = 0,
 
     }
 }
@@ -7089,6 +7089,4 @@ function startAutoUnban()
     end
 end
 
-local Tab = Window:NewTab("مضادات")
-local Section = Tab:NewSection("تفعيل")
 
