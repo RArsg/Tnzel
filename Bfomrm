@@ -322,6 +322,14 @@ UniversalTab:AddButton({
     end
 })
 
+-- Botão para ShiftLock
+UniversalTab:AddButton({
+    Name = "سكربت مضاد",
+    Callback = function()
+        loadstring(game:HttpGet("https://pastebin.com/raw/N2tiHgyv"))()
+    end
+})
+
 UniversalTab:AddButton({
   Name = "سكربـت الـرقـصـات",
   Callback = function()
