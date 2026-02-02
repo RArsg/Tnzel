@@ -7109,3 +7109,10 @@ UniversalTab:AddButton({
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
   end,
 })
+
+UniversalTab:AddButton({
+  Name = "مضاد جلوس",
+  Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Jlos"))()
+  end,
+})
