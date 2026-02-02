@@ -331,13 +331,6 @@ UniversalTab:AddButton({
 })
 
 UniversalTab:AddButton({
-  Name = "قيد تطوير",
-  Callback = function()
-    loadstring(game:HttpGet("https://pastebin.com/raw/Vj8u7Cg7"))()
-  end,
-})
-
-UniversalTab:AddButton({
   Name = "سكربـت الـرحـمة",
   Callback = function()
     -- line: [0, 0] id: 120
@@ -7107,5 +7100,12 @@ UniversalTab:AddButton({
   Name = "مضاد فلنق",
   Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "مضاد بانج",
+  Callback = function()
+    loadstring(game:HttpGet(""))()
   end,
 })
