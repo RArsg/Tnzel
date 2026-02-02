@@ -7110,4 +7110,4 @@ function startAutoUnban()
     end
 end
 
-
+local UniversalTab = Window:MakeTab({"مضادات", "plane"})
