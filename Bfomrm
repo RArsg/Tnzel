@@ -7116,10 +7116,3 @@ UniversalTab:AddButton({
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
   end,
 })
-
-UniversalTab:AddButton({
-  Name = "مضاد قيد تطوير",
-  Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
-  end,
-})
