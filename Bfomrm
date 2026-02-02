@@ -7117,3 +7117,9 @@ Section = UniversalTab:AddSection({
     Name = "مضادات"
 })
 
+UniversalTab:AddButton({
+  Name = " مضاد بانج",
+  Callback = function()
+    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
+  end,
+})
