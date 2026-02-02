@@ -1,4 +1,4 @@
---TS7 was here.
+يا--TS7 was here.
 -- ////////////
 shared.LoaderTitle = "Everlast  HUB";
 shared.LoaderKeyFrames = {
@@ -330,12 +330,6 @@ UniversalTab:AddButton({
   end,
 })
 
-UniversalTab:AddButton({
-  Name = "سكربت مضاد بانج",
-  Callback = function()
-    loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
-  end,
-})
 
 UniversalTab:AddButton({
   Name = "قيد تطوير",
@@ -7121,5 +7115,12 @@ UniversalTab:AddButton({
   Name = " مضاد بانج",
   Callback = function()
     loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Gaze-Anti-bang-V1-22240"))()
+  end,
+})
+
+UniversalTab:AddButton({
+  Name = "مضاد فلنق",
+  Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
   end,
 })
