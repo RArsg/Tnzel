@@ -330,7 +330,6 @@ UniversalTab:AddButton({
   end,
 })
 
-
 UniversalTab:AddButton({
   Name = "قيد تطوير",
   Callback = function()
@@ -7119,7 +7118,7 @@ UniversalTab:AddButton({
 })
 
 UniversalTab:AddButton({
-  Name = "مضاد فلنق",
+  Name = "مضاد قيد تطوير",
   Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
   end,
