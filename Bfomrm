@@ -7111,3 +7111,9 @@ function startAutoUnban()
 end
 
 local UniversalTab = Window:MakeTab({"مضادات", "plane"})
+
+-- Seção para Scripts Universais
+Section = UniversalTab:AddSection({
+    Name = "مضادات"
+})
+
