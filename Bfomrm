@@ -347,7 +347,7 @@ UniversalTab:AddButton({
 UniversalTab:AddButton({
   Name = "مضاد فلنق",
   Callback = function()
-    loadstring(game:HttpGet("https://pastebin.com/v8EHHqa5"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/kiki-stor/refs/heads/main/Flng?token=GHSAT0AAAAAADUGIWFFVHFSTTAACACV6CZ22L75KUA"))()
   end,
 })
 
