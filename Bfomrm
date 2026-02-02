@@ -7116,3 +7116,10 @@ UniversalTab:AddButton({
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Jlos"))()
   end,
 })
+
+UniversalTab:AddButton({
+  Name = "مضاد جلوس",
+  Callback = function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Tgmed"))()
+  end,
+})
