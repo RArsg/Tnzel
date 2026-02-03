@@ -7131,10 +7131,9 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
--- Botão para TP Tool
 UniversalTab:AddButton({
     Name = "اداة انتقال",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/err0r129/KptHadesBlair/main/Bao.lua"))()
-    end
+loadstring(game:HttpGet("https://raw.githubusercontent.com/err0r129/KptHadesBlair/main/Bao.lua"))()
+    end,
 })
