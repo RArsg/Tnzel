@@ -7131,16 +7131,10 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
-local PlayerSection = Troll:AddSection({ Name = "تخريب على اللاعبين" })
-
-    -- Função para obter lista de jogadores
-    local function getPlayerList()
-        local players = Players:GetPlayers()
-        local playerNames = {}
-        for _, player in ipairs(players) do
-            if player ~= LocalPlayer then
-                table.insert(playerNames, player.Name)
-            end
-        end
-        return playerNames
+-- Botão para TP Tool
+UniversalTab:AddButton({
+    Name = "اداة انتقال",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/err0r129/KptHadesBlair/main/Bao.lua"))()
     end
+})
