@@ -7130,3 +7130,22 @@ UniversalTab:AddButton({
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'),true))()
  end,
 })
+
+Troll:AddButton({
+    Name = "تطيير بالكرة⚾",
+    Callback = function()
+        FlingBall(game:GetService("Players")[selectedPlayerName])
+    end
+})
+
+local Players = game:GetService('Players')
+local lplayer = Players.LocalPlayer
+
+local function isItemInInventory(itemName)
+    for _, item in pairs(lplayer.Backpack:GetChildren()) do
+        if item.Name == itemName then
+            return true
+        end
+    end
+    return false
+end
