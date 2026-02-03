@@ -7109,6 +7109,13 @@ UniversalTab:AddButton({
   end,
 })
 
+UniversalTab:AddButton({
+  Name = " قيد تطوير",
+  Callback = function()
+    loadstring(game:HttpGet(""))()
+  end,
+})
+
 local UniversalTab = Window:MakeTab({"ادوات", "plane"})
 
 -- Seção para Scripts Universais
@@ -7128,4 +7135,11 @@ UniversalTab:AddButton({
     Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/err0r129/KptHadesBlair/main/Bao.lua"))()
     end,
+})
+
+UniversalTab:AddButton({
+  Name = " قيد تطوير",
+  Callback = function()
+    loadstring(game:HttpGet(""))()
+  end,
 })
