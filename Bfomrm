@@ -366,7 +366,7 @@ UniversalTab:AddButton({
 UniversalTab:AddButton({
     Name = "طيران",
     Callback = function()
-        loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Fly-v3-7412"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Jloc/refs/heads/main/Fly"))()
     end
 })
 
