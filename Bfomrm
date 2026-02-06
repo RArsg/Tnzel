@@ -7088,6 +7088,8 @@ Section = UniversalTab:AddSection({
     Name = "مضادات"
 })
 
+InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK (" })
+
 UniversalTab:AddButton({
   Name = "مضاد فلنق",
   Callback = function()
