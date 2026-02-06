@@ -7144,47 +7144,253 @@ UniversalTab:AddButton({
   end,
 })
 
-AddSection(Main, {"الـحمـايـة مـن الـجـلـوس"})
-
-
-AddToggle(Main, {
-    Name = "حـمـايـة جـلـوس",
-    Default = false,
-    Callback = function(state)
-local seats = {}
-for _, seat in next, workspace:GetDescendants() do
-	if seat:IsA("Seat") then
-		seats[seat] = true
-	end
-end
-
-workspace.DescendantAdded:connect(function(seat)
-	if seat:IsA("Seat") then
-		seats[seat] = true
-		seat.Disabled = not enabled
-	end
-end)
-
-workspace.DescendantRemoving:connect(function(seat)
-	if seat:IsA("Seat") then
-		seats[seat] = nil
-	end
-end)
-
-setEnabled = function(newEnabled)
-	if newEnabled == enabled then
-		return
-	end
-	enabled = newEnabled
-	for seat, _ in next, seats do
-		seat.Disabled = not enabled
-	end
-end
-
----
-
-setEnabled(false)
-	end,
+-- Tab للتحكم في سرعة الشخصية والقفز
+local ControlTab = Window:MakeTab({
+    Name = "التحكم في الشخصية",
+    Icon = "rbxassetid://4483345998", -- أيقونة تحكم
+    PremiumOnly = false
 })
 
+-- قسم السرعة
+ControlTab:AddSection({
+    Name = "⚡ إعدادات السرعة"
+})
 
+-- Toggle لتفعيل السرعة المخصصة
+local SpeedToggle = ControlTab:AddToggle({
+    Name = "تفعيل السرعة المخصصة",
+    Default = false,
+    Callback = function(state)
+        CustomSpeedEnabled = state
+        if state then
+            applyCustomSpeed()
+        else
+            resetSpeed()
+        end
+    end
+})
+
+-- Slider لسرعة المشي
+local WalkSpeedSlider = ControlTab:AddSlider({
+    Name = "سرعة المشي",
+    Min = 16,
+    Max = 200,
+    Default = 16,
+    Color = Color3.fromRGB(0, 255, 0),
+    Increment = 1,
+    ValueName = "سرعة",
+    Callback = function(value)
+        WalkSpeedValue = value
+        if CustomSpeedEnabled then
+            applyCustomSpeed()
+        end
+    end
+})
+
+-- Slider لسرعة الجري
+local RunSpeedSlider = ControlTab:AddSlider({
+    Name = "سرعة الجري",
+    Min = 50,
+    Max = 500,
+    Default = 50,
+    Color = Color3.fromRGB(0, 200, 255),
+    Increment = 5,
+    ValueName = "سرعة",
+    Callback = function(value)
+        RunSpeedValue = value
+        if CustomSpeedEnabled then
+            applyCustomSpeed()
+        end
+    end
+})
+
+-- قسم القفز
+ControlTab:AddSection({
+    Name = "🦘 إعدادات القفز"
+})
+
+-- Toggle لتفعيل القفز العالي
+local JumpToggle = ControlTab:AddToggle({
+    Name = "تفعيل القفز العالي",
+    Default = false,
+    Callback = function(state)
+        HighJumpEnabled = state
+        if state then
+            applyCustomJump()
+        else
+            resetJump()
+        end
+    end
+})
+
+-- Slitor لارتفاع القفز
+local JumpPowerSlider = ControlTab:AddSlider({
+    Name = "قوة القفز",
+    Min = 50,
+    Max = 500,
+    Default = 50,
+    Color = Color3.fromRGB(255, 150, 0),
+    Increment = 10,
+    ValueName = "ارتفاع",
+    Callback = function(value)
+        JumpPowerValue = value
+        if HighJumpEnabled then
+            applyCustomJump()
+        end
+    end
+})
+
+-- Slider لعدد القفزات المتعددة
+local MultiJumpSlider = ControlTab:AddSlider({
+    Name = "عدد القفزات المتعددة",
+    Min = 1,
+    Max = 10,
+    Default = 1,
+    Color = Color3.fromRGB(255, 0, 255),
+    Increment = 1,
+    ValueName = "قفزات",
+    Callback = function(value)
+        MaxJumps = value
+        if HighJumpEnabled then
+            applyCustomJump()
+        end
+    end
+})
+
+-- قسم التحكم السريع
+ControlTab:AddSection({
+    Name = "🎯 تحكم سريع"
+})
+
+-- أزرار سريعة للسرعة
+ControlTab:AddButton({
+    Name = "سرعة سريعة (100)",
+    Callback = function()
+        WalkSpeedSlider:Set(100)
+        RunSpeedSlider:Set(200)
+        SpeedToggle:Set(true)
+    end
+})
+
+ControlTab:AddButton({
+    Name = "سرعة فائقة (200)",
+    Callback = function()
+        WalkSpeedSlider:Set(200)
+        RunSpeedSlider:Set(400)
+        SpeedToggle:Set(true)
+    end
+})
+
+ControlTab:AddButton({
+    Name = "قفز عالي (200)",
+    Callback = function()
+        JumpPowerSlider:Set(200)
+        MultiJumpSlider:Set(3)
+        JumpToggle:Set(true)
+    end
+})
+
+-- قسم الإعادة
+ControlTab:AddSection({
+    Name = "🔄 الإعادة"
+})
+
+ControlTab:AddButton({
+    Name = "إعادة كل الإعدادات",
+    Callback = function()
+        resetAllSettings()
+    end
+})
+
+-- المتغيرات
+local WalkSpeedValue = 16
+local RunSpeedValue = 50
+local JumpPowerValue = 50
+local MaxJumps = 1
+local CustomSpeedEnabled = false
+local HighJumpEnabled = false
+local JumpCount = 0
+
+-- وظيفة تطبيق السرعة المخصصة
+function applyCustomSpeed()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    humanoid.WalkSpeed = WalkSpeedValue
+    humanoid.JumpPower = JumpPowerValue
+end
+
+-- وظيفة تطبيق القفز المخصص
+function applyCustomJump()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    humanoid.JumpPower = JumpPowerValue
+    
+    -- نظام القفز المتعدد
+    if MaxJumps > 1 then
+        humanoid.StateChanged:Connect(function(oldState, newState)
+            if newState == Enum.HumanoidStateType.Freefall then
+                JumpCount = JumpCount + 1
+            elseif newState == Enum.HumanoidStateType.Landed then
+                JumpCount = 0
+            end
+        end)
+        
+        game:GetService("UserInputService").JumpRequest:Connect(function()
+            if JumpCount < MaxJumps then
+                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end)
+    end
+end
+
+-- وظيفة إعادة السرعة
+function resetSpeed()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    humanoid.WalkSpeed = 16
+end
+
+-- وظيفة إعادة القفز
+function resetJump()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+    
+    humanoid.JumpPower = 50
+    JumpCount = 0
+end
+
+-- وظيفة إعادة كل الإعدادات
+function resetAllSettings()
+    WalkSpeedSlider:Set(16)
+    RunSpeedSlider:Set(50)
+    JumpPowerSlider:Set(50)
+    MultiJumpSlider:Set(1)
+    SpeedToggle:Set(false)
+    JumpToggle:Set(false)
+    
+    WalkSpeedValue = 16
+    RunSpeedValue = 50
+    JumpPowerValue = 50
+    MaxJumps = 1
+    CustomSpeedEnabled = false
+    HighJumpEnabled = false
+    JumpCount = 0
+end
+
+-- معالجة إعادة ظهور الشخصية
+game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
+    wait(1)
+    if CustomSpeedEnabled then
+        applyCustomSpeed()
+    end
+    if HighJumpEnabled then
+        applyCustomJump()
+    end
+end)
