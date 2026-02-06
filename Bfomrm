@@ -7144,32 +7144,42 @@ UniversalTab:AddButton({
   end,
 })
 
--- Tab للتحكم في سرعة الشخصية والقفز - نسخة حقيقية
+-- التحكم الحقيقي في سرعة الشخصية والقفز
 local ControlTab = Window:MakeTab({
     Name = "التحكم في الشخصية",
     Icon = "",
     PremiumOnly = false
 })
 
+-- متغيرات حقيقية
+local player = game.Players.LocalPlayer
+local WalkSpeedValue = 16
+local JumpPowerValue = 50
+local MaxJumpsValue = 1
+local speedEnabled = false
+local jumpEnabled = false
+local jumpCount = 0
+
 -- قسم السرعة
 ControlTab:AddSection({
     Name = "اعدادات السرعة"
 })
 
--- Toggle لتفعيل السرعة المخصصة
-local SpeedToggle = ControlTab:AddToggle({
-    Name = "تفعيل السرعة المخصصة",
+-- Toggle السرعة
+local speedToggle = ControlTab:AddToggle({
+    Name = "تفعيل السرعة",
     Default = false,
     Callback = function(state)
+        speedEnabled = state
         if state then
-            activateCustomSpeed()
+            applyWalkSpeed()
         else
-            deactivateCustomSpeed()
+            resetWalkSpeed()
         end
     end
 })
 
--- Slider لسرعة المشي
+-- Slider السرعة
 ControlTab:AddSlider({
     Name = "سرعة المشي",
     Min = 16,
@@ -7180,25 +7190,8 @@ ControlTab:AddSlider({
     ValueName = "سرعة",
     Callback = function(value)
         WalkSpeedValue = value
-        if SpeedToggle.Value then
-            updateCharacterSpeed()
-        end
-    end
-})
-
--- Slider لسرعة الجري
-ControlTab:AddSlider({
-    Name = "سرعة الجري",
-    Min = 50,
-    Max = 500,
-    Default = 50,
-    Color = Color3.fromRGB(0, 200, 255),
-    Increment = 5,
-    ValueName = "سرعة",
-    Callback = function(value)
-        RunSpeedValue = value
-        if SpeedToggle.Value then
-            updateCharacterSpeed()
+        if speedEnabled then
+            applyWalkSpeed()
         end
     end
 })
@@ -7208,20 +7201,21 @@ ControlTab:AddSection({
     Name = "اعدادات القفز"
 })
 
--- Toggle لتفعيل القفز العالي
-local JumpToggle = ControlTab:AddToggle({
-    Name = "تفعيل القفز العالي",
+-- Toggle القفز
+local jumpToggle = ControlTab:AddToggle({
+    Name = "تفعيل القفز",
     Default = false,
     Callback = function(state)
+        jumpEnabled = state
         if state then
-            activateCustomJump()
+            applyJumpPower()
         else
-            deactivateCustomJump()
+            resetJumpPower()
         end
     end
 })
 
--- Slider لارتفاع القفز
+-- Slider قوة القفز
 ControlTab:AddSlider({
     Name = "قوة القفز",
     Min = 50,
@@ -7229,245 +7223,133 @@ ControlTab:AddSlider({
     Default = 50,
     Color = Color3.fromRGB(255, 150, 0),
     Increment = 10,
-    ValueName = "ارتفاع",
+    ValueName = "قوة",
     Callback = function(value)
         JumpPowerValue = value
-        if JumpToggle.Value then
-            updateCharacterJump()
+        if jumpEnabled then
+            applyJumpPower()
         end
     end
 })
 
--- Slider لعدد القفزات المتعددة
-ControlTab:AddSlider({
-    Name = "عدد القفزات المتعددة",
-    Min = 1,
-    Max = 10,
-    Default = 1,
-    Color = Color3.fromRGB(255, 0, 255),
-    Increment = 1,
-    ValueName = "قفزات",
-    Callback = function(value)
-        MaxJumpsValue = value
-        if JumpToggle.Value then
-            setupMultiJump()
-        end
-    end
-})
-
--- قسم التحكم السريع
+-- أزرار التحكم السريع
 ControlTab:AddSection({
     Name = "تحكم سريع"
 })
 
--- أزرار سريعة للسرعة
+-- سرعة 100
 ControlTab:AddButton({
-    Name = "سرعة سريعة (100)",
+    Name = "سرعة 100",
     Callback = function()
         WalkSpeedValue = 100
-        RunSpeedValue = 200
-        SpeedToggle:Set(true)
-        activateCustomSpeed()
+        speedToggle:Set(true)
+        applyWalkSpeed()
     end
 })
 
+-- سرعة 200
 ControlTab:AddButton({
-    Name = "سرعة فائقة (200)",
+    Name = "سرعة 200",
     Callback = function()
         WalkSpeedValue = 200
-        RunSpeedValue = 400
-        SpeedToggle:Set(true)
-        activateCustomSpeed()
+        speedToggle:Set(true)
+        applyWalkSpeed()
     end
 })
 
+-- قفز 200
 ControlTab:AddButton({
-    Name = "قفز عالي (200)",
+    Name = "قفز 200",
     Callback = function()
         JumpPowerValue = 200
-        MaxJumpsValue = 3
-        JumpToggle:Set(true)
-        activateCustomJump()
+        jumpToggle:Set(true)
+        applyJumpPower()
     end
 })
 
 -- قسم الإعادة
 ControlTab:AddSection({
-    Name = "الإعادة"
+    Name = "الاعدادات"
 })
 
 ControlTab:AddButton({
-    Name = "إعادة كل الإعدادات",
+    Name = "اعادة كل الاعدادات",
     Callback = function()
-        resetAllSettings()
+        WalkSpeedValue = 16
+        JumpPowerValue = 50
+        speedToggle:Set(false)
+        jumpToggle:Set(false)
+        resetWalkSpeed()
+        resetJumpPower()
     end
 })
 
--- متغيرات النظام
-local WalkSpeedValue = 16
-local RunSpeedValue = 50
-local JumpPowerValue = 50
-local MaxJumpsValue = 1
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local jumpCount = 0
-local multiJumpConnection = nil
+-- الدوال الحقيقية
 
--- وظيفة تفعيل السرعة المخصصة
-function activateCustomSpeed()
-    updateCharacterSpeed()
-    createSpeedConnection()
-end
-
--- وظيفة إلغاء السرعة المخصصة
-function deactivateCustomSpeed()
-    if humanoid then
-        humanoid.WalkSpeed = 16
-    end
-    removeSpeedConnection()
-end
-
--- وظيفة تحديث سرعة الشخصية
-function updateCharacterSpeed()
-    if humanoid then
-        humanoid.WalkSpeed = WalkSpeedValue
-    end
-end
-
--- وظيفة إنشاء اتصال مراقبة الشخصية للسرعة
-function createSpeedConnection()
-    player.CharacterAdded:Connect(function(newChar)
-        character = newChar
-        humanoid = character:WaitForChild("Humanoid")
-        updateCharacterSpeed()
-    end)
-end
-
--- وظيفة إزالة اتصال السرعة
-function removeSpeedConnection()
-    -- لا تحتاج لإزالة اتصال في هذا النظام البسيط
-end
-
--- وظيفة تفعيل القفز المخصص
-function activateCustomJump()
-    updateCharacterJump()
-    setupMultiJump()
-    createJumpConnection()
-end
-
--- وظيفة إلغاء القفز المخصص
-function deactivateCustomJump()
-    if humanoid then
-        humanoid.JumpPower = 50
-    end
-    removeMultiJump()
-    removeJumpConnection()
-end
-
--- وظيفة تحديث قوة القفز
-function updateCharacterJump()
-    if humanoid then
-        humanoid.JumpPower = JumpPowerValue
-    end
-end
-
--- وظيفة إعداد القفز المتعدد
-function setupMultiJump()
-    if MaxJumpsValue <= 1 then return end
-    
-    if multiJumpConnection then
-        multiJumpConnection:Disconnect()
-    end
-    
-    multiJumpConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
-        if humanoid and humanoid.FloorMaterial == Enum.Material.Air then
-            if jumpCount < MaxJumpsValue then
-                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                jumpCount = jumpCount + 1
-            end
-        else
-            jumpCount = 0
+-- تطبيق سرعة المشي
+function applyWalkSpeed()
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = WalkSpeedValue
         end
-    end)
-end
-
--- وظيفة إزالة القفز المتعدد
-function removeMultiJump()
-    if multiJumpConnection then
-        multiJumpConnection:Disconnect()
-        multiJumpConnection = nil
     end
-    jumpCount = 0
 end
 
--- وظيفة إنشاء اتصال مراقبة الشخصية للقفز
-function createJumpConnection()
-    player.CharacterAdded:Connect(function(newChar)
-        character = newChar
-        humanoid = character:WaitForChild("Humanoid")
-        updateCharacterJump()
-        if JumpToggle.Value then
-            setupMultiJump()
+-- إعادة سرعة المشي
+function resetWalkSpeed()
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = 16
         end
-    end)
+    end
 end
 
--- وظيفة إزالة اتصال القفز
-function removeJumpConnection()
-    -- لا تحتاج لإزالة اتصال في هذا النظام البسيط
+-- تطبيق قوة القفز
+function applyJumpPower()
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.JumpPower = JumpPowerValue
+        end
+    end
 end
 
--- وظيفة إعادة كل الإعدادات
-function resetAllSettings()
-    -- إعادة القيم
-    WalkSpeedValue = 16
-    RunSpeedValue = 50
-    JumpPowerValue = 50
-    MaxJumpsValue = 1
-    
-    -- إعادة التoggles
-    SpeedToggle:Set(false)
-    JumpToggle:Set(false)
-    
-    -- إعادة السرعة والقفز إلى الافتراضي
-    deactivateCustomSpeed()
-    deactivateCustomJump()
-    
-    -- إشعار
-    game:GetService("StarterGui"):SetCore("SendNotification",{
-        Title = "التحكم في الشخصية",
-        Text = "تمت إعادة كل الإعدادات",
-        Duration = 3
-    })
-end
-
--- تهيئة أولية
-if SpeedToggle.Value then
-    activateCustomSpeed()
-end
-
-if JumpToggle.Value then
-    activateCustomJump()
+-- إعادة قوة القفز
+function resetJumpPower()
+    local character = player.Character
+    if character then
+        local humanoid = character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.JumpPower = 50
+        end
+    end
 end
 
 -- معالجة إعادة ظهور الشخصية
-player.CharacterAdded:Connect(function(newChar)
-    character = newChar
-    humanoid = character:WaitForChild("Humanoid")
+player.CharacterAdded:Connect(function(character)
+    wait(1) -- انتظار تحميل الشخصية
     
-    -- انتظار تحميل الشخصية
-    wait(1)
-    
-    -- تطبيق الإعدادات إذا كانت مفعلة
-    if SpeedToggle.Value then
-        updateCharacterSpeed()
+    if speedEnabled then
+        applyWalkSpeed()
     end
     
-    if JumpToggle.Value then
-        updateCharacterJump()
-        setupMultiJump()
+    if jumpEnabled then
+        applyJumpPower()
     end
 end)
 
-print("Tab التحكم في الشخصية جاهز للاستخدام")
+-- تطبيق أولي إذا كانت التoggles مفعلة
+if speedToggle.Value then
+    applyWalkSpeed()
+end
+
+if jumpToggle.Value then
+    applyJumpPower()
+end
+
+print("✅ نظام التحكم في الشخصية جاهز!")
