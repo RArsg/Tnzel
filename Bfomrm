@@ -2525,7 +2525,7 @@ end)
 })
 
 Troll:AddButton({
-  Name = "قتل ب اداة غريبة لازم تنزل تحت الماب وتجيك [Beta]",
+  Name = "قتل ب اداة غريبة لازم تنزل تحت الماب وتجيك ",
   Callback = function()
     local Players = game:GetService("Players")
     local Workspace = game:GetService("Workspace")
@@ -7089,11 +7089,10 @@ Section = UniversalTab:AddSection({
 })
 
 TrollTab:AddButton({
-    Name = "ملاحظه",
-    Description = "كل هادي المضاداات عباره علي سكربتات من صنع DBLACK",
-Callback = function()
 
+    ChildTab:AddParagraph({"معلومة:", "هنا تبعث عفاريت للناس."})
 UniversalTab:AddButton({
+
   Name = "مضاد فلنق",
   Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
