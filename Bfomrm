@@ -7088,6 +7088,11 @@ Section = UniversalTab:AddSection({
     Name = "مضادات"
 })
 
+TrollTab:AddButton({
+    Name = "ملاحظه",
+    Description = "كل هادي المضاداات عباره علي سكربتات من صنع DBLACK",
+Callback = function()
+
 UniversalTab:AddButton({
   Name = "مضاد فلنق",
   Callback = function()
