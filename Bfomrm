@@ -7090,9 +7090,8 @@ Section = UniversalTab:AddSection({
 
 TrollTab:AddButton({
 
-    ChildTab:AddParagraph({"معلومة:", "هنا تبعث عفاريت للناس."})
+  ChildTab:AddParagraph({"معلومة:", "هنا تبعث عفاريت للناس."}
 UniversalTab:AddButton({
-
   Name = "مضاد فلنق",
   Callback = function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/RArsg/Flang-dex/refs/heads/main/flang"))()
