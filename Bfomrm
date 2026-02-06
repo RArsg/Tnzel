@@ -7144,212 +7144,252 @@ UniversalTab:AddButton({
   end,
 })
 
--- التحكم الحقيقي في سرعة الشخصية والقفز
+-- نظام تحكم حقيقي يعمل مع أي لعبة
 local ControlTab = Window:MakeTab({
-    Name = "التحكم في الشخصية",
+    Name = "التحكم الشخصي",
     Icon = "",
     PremiumOnly = false
 })
 
--- متغيرات حقيقية
+-- متغيرات النظام
 local player = game.Players.LocalPlayer
-local WalkSpeedValue = 16
-local JumpPowerValue = 50
-local MaxJumpsValue = 1
 local speedEnabled = false
 local jumpEnabled = false
-local jumpCount = 0
+local currentSpeed = 50
+local currentJump = 50
+local speedBV = nil
+local jumpBV = nil
 
 -- قسم السرعة
 ControlTab:AddSection({
-    Name = "اعدادات السرعة"
+    Name = "السرعة"
 })
 
 -- Toggle السرعة
 local speedToggle = ControlTab:AddToggle({
-    Name = "تفعيل السرعة",
+    Name = "سرعة سريعة",
     Default = false,
     Callback = function(state)
         speedEnabled = state
         if state then
-            applyWalkSpeed()
+            activateSpeed()
         else
-            resetWalkSpeed()
+            deactivateSpeed()
         end
     end
 })
 
 -- Slider السرعة
 ControlTab:AddSlider({
-    Name = "سرعة المشي",
-    Min = 16,
+    Name = "مستوى السرعة",
+    Min = 50,
     Max = 200,
-    Default = 16,
-    Color = Color3.fromRGB(0, 255, 0),
-    Increment = 1,
+    Default = 50,
+    Color = Color3.fromRGB(0, 200, 0),
+    Increment = 10,
     ValueName = "سرعة",
     Callback = function(value)
-        WalkSpeedValue = value
+        currentSpeed = value
         if speedEnabled then
-            applyWalkSpeed()
+            updateSpeed()
         end
     end
 })
 
 -- قسم القفز
 ControlTab:AddSection({
-    Name = "اعدادات القفز"
+    Name = "القفز"
 })
 
 -- Toggle القفز
 local jumpToggle = ControlTab:AddToggle({
-    Name = "تفعيل القفز",
+    Name = "قفز عالي",
     Default = false,
     Callback = function(state)
         jumpEnabled = state
         if state then
-            applyJumpPower()
+            activateJump()
         else
-            resetJumpPower()
+            deactivateJump()
         end
     end
 })
 
--- Slider قوة القفز
+-- Slider القفز
 ControlTab:AddSlider({
-    Name = "قوة القفز",
+    Name = "مستوى القفز",
     Min = 50,
-    Max = 500,
+    Max = 300,
     Default = 50,
-    Color = Color3.fromRGB(255, 150, 0),
+    Color = Color3.fromRGB(200, 100, 0),
     Increment = 10,
     ValueName = "قوة",
     Callback = function(value)
-        JumpPowerValue = value
+        currentJump = value
         if jumpEnabled then
-            applyJumpPower()
+            updateJump()
         end
     end
 })
 
--- أزرار التحكم السريع
+-- أزرار سريعة
 ControlTab:AddSection({
-    Name = "تحكم سريع"
+    Name = "سريع"
 })
 
--- سرعة 100
 ControlTab:AddButton({
     Name = "سرعة 100",
     Callback = function()
-        WalkSpeedValue = 100
+        currentSpeed = 100
         speedToggle:Set(true)
-        applyWalkSpeed()
+        activateSpeed()
     end
 })
 
--- سرعة 200
 ControlTab:AddButton({
-    Name = "سرعة 200",
+    Name = "سرعة 150",
     Callback = function()
-        WalkSpeedValue = 200
+        currentSpeed = 150
         speedToggle:Set(true)
-        applyWalkSpeed()
+        activateSpeed()
     end
 })
 
--- قفز 200
 ControlTab:AddButton({
-    Name = "قفز 200",
+    Name = "قفز 150",
     Callback = function()
-        JumpPowerValue = 200
+        currentJump = 150
         jumpToggle:Set(true)
-        applyJumpPower()
+        activateJump()
     end
 })
 
--- قسم الإعادة
+-- قسم الإعدادات
 ControlTab:AddSection({
-    Name = "الاعدادات"
+    Name = "إعدادات"
 })
 
 ControlTab:AddButton({
-    Name = "اعادة كل الاعدادات",
+    Name = "إعادة ضبط",
     Callback = function()
-        WalkSpeedValue = 16
-        JumpPowerValue = 50
         speedToggle:Set(false)
         jumpToggle:Set(false)
-        resetWalkSpeed()
-        resetJumpPower()
+        deactivateSpeed()
+        deactivateJump()
     end
 })
 
--- الدوال الحقيقية
-
--- تطبيق سرعة المشي
-function applyWalkSpeed()
+-- نظام السرعة الحقيقي
+function activateSpeed()
     local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = WalkSpeedValue
-        end
-    end
-end
-
--- إعادة سرعة المشي
-function resetWalkSpeed()
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.WalkSpeed = 16
-        end
-    end
-end
-
--- تطبيق قوة القفز
-function applyJumpPower()
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.JumpPower = JumpPowerValue
-        end
-    end
-end
-
--- إعادة قوة القفز
-function resetJumpPower()
-    local character = player.Character
-    if character then
-        local humanoid = character:FindFirstChild("Humanoid")
-        if humanoid then
-            humanoid.JumpPower = 50
-        end
-    end
-end
-
--- معالجة إعادة ظهور الشخصية
-player.CharacterAdded:Connect(function(character)
-    wait(1) -- انتظار تحميل الشخصية
+    if not character then return end
     
-    if speedEnabled then
-        applyWalkSpeed()
+    local root = character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    
+    -- إزالة السرعة القديمة إذا وجدت
+    if speedBV then
+        speedBV:Destroy()
     end
     
-    if jumpEnabled then
-        applyJumpPower()
+    -- إنشاء BodyVelocity جديد
+    speedBV = Instance.new("BodyVelocity")
+    speedBV.Name = "SpeedBooster"
+    speedBV.MaxForce = Vector3.new(10000, 0, 10000)
+    speedBV.Velocity = Vector3.new(0, 0, 0)
+    speedBV.Parent = root
+    
+    -- بدء تحديث السرعة
+    updateSpeed()
+end
+
+function updateSpeed()
+    if not speedBV then return end
+    
+    local character = player.Character
+    if not character then return end
+    
+    local humanoid = character:FindFirstChild("Humanoid")
+    if not humanoid then return end
+    
+    -- الحصول على اتجاه الحركة
+    local moveDirection = humanoid.MoveDirection
+    if moveDirection.Magnitude > 0 then
+        speedBV.Velocity = moveDirection * currentSpeed
+    else
+        speedBV.Velocity = Vector3.new(0, 0, 0)
+    end
+end
+
+function deactivateSpeed()
+    if speedBV then
+        speedBV:Destroy()
+        speedBV = nil
+    end
+end
+
+-- نظام القفز الحقيقي
+function activateJump()
+    local character = player.Character
+    if not character then return end
+    
+    local root = character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    
+    -- إزالة القفز القديم إذا وجد
+    if jumpBV then
+        jumpBV:Destroy()
+    end
+    
+    -- إنشاء BodyVelocity للقفز
+    jumpBV = Instance.new("BodyVelocity")
+    jumpBV.Name = "JumpBooster"
+    jumpBV.MaxForce = Vector3.new(0, 10000, 0)
+    jumpBV.Velocity = Vector3.new(0, 0, 0)
+    jumpBV.Parent = root
+end
+
+function updateJump()
+    if not jumpBV then return end
+    jumpBV.Velocity = Vector3.new(0, currentJump, 0)
+end
+
+function deactivateJump()
+    if jumpBV then
+        jumpBV:Destroy()
+        jumpBV = nil
+    end
+end
+
+-- التحكم في القفز بالزر
+local UIS = game:GetService("UserInputService")
+UIS.InputBegan:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.Space and jumpEnabled and jumpBV then
+        jumpBV.Velocity = Vector3.new(0, currentJump, 0)
     end
 end)
 
--- تطبيق أولي إذا كانت التoggles مفعلة
-if speedToggle.Value then
-    applyWalkSpeed()
-end
+-- تحديث السرعة باستمرار عند الحركة
+game:GetService("RunService").Heartbeat:Connect(function()
+    if speedEnabled and speedBV then
+        updateSpeed()
+    end
+end)
 
-if jumpToggle.Value then
-    applyJumpPower()
-end
+-- معالجة إعادة ظهور الشخصية
+player.CharacterAdded:Connect(function(character)
+    task.wait(1)
+    
+    if speedEnabled then
+        activateSpeed()
+    end
+    
+    if jumpEnabled then
+        activateJump()
+    end
+end)
 
-print("✅ نظام التحكم في الشخصية جاهز!")
+-- Label إرشادي
+ControlTab:AddLabel("استخدم Space للقفز عندما يكون مفعلاً")
+
+print("نظام التحكم الشخصي جاهز!")
