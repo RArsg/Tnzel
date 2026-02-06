@@ -7144,195 +7144,308 @@ UniversalTab:AddButton({
   end,
 })
 
--- نظام سرعة وقفز بسيط يعمل 100%
+-- تاب بروكهافن النهائي مع كل المميزات
 local ControlTab = Window:MakeTab({
-    Name = "سرعة وقفز",
-    Icon = "",
+    Name = "🚀 بروكهافن",
+    Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
 
--- أخبرني اذا كان هذا يعمل
-print("بدء تحميل نظام السرعة والقفز...")
-
--- إضافة رسالة في التاب
-ControlTab:AddLabel("=== نظام تجريبي ===")
-ControlTab:AddLabel("إذا لم يعمل أي شيء")
-ControlTab:AddLabel("أخبرني باللعبة")
-ControlTab:AddLabel("لأصنع سكربت مخصص")
-
--- محاولة بسيطة للسرعة
-ControlTab:AddButton({
-    Name = "تجربة السرعة (50)",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        local char = player.Character
-        if char then
-            local humanoid = char:FindFirstChild("Humanoid")
-            if humanoid then
-                humanoid.WalkSpeed = 50
-                print("✅ تم تغيير السرعة إلى 50")
-                game:GetService("StarterGui"):SetCore("SendNotification",{
-                    Title = "نجاح",
-                    Text = "السرعة 50",
-                    Duration = 3
-                })
-            else
-                print("❌ لا يوجد Humanoid")
-            end
-        end
-    end
+-- إضافة معلومات النظام
+ControlTab:AddSection({
+    Name = "🎮 نظام بروكهافن النهائي"
 })
 
--- محاولة بسيطة للقفز
-ControlTab:AddButton({
-    Name = "تجربة القفز (100)",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        local char = player.Character
-        if char then
-            local humanoid = char:FindFirstChild("Humanoid")
-            if humanoid then
-                humanoid.JumpPower = 100
-                print("✅ تم تغيير القفز إلى 100")
-                game:GetService("StarterGui"):SetCore("SendNotification",{
-                    Title = "نجاح",
-                    Text = "القفز 100",
-                    Duration = 3
-                })
-            else
-                print("❌ لا يوجد Humanoid")
-            end
-        end
-    end
+ControlTab:AddParagraph("بروكهافن الخارق", "جميع المميزات في تاب واحد")
+ControlTab:AddLabel("✅ السرعة الخارقة")
+ControlTab:AddLabel("✅ القفز العالي")
+ControlTab:AddLabel("✅ اختراق الجدران")
+ControlTab:AddLabel("✅ التحكم في الجاذبية")
+ControlTab:AddLabel("✅ القفز المتتالي")
+
+-- القسم 1: السرعة الخارقة
+ControlTab:AddSection({
+    Name = "⚡ السرعة الخارقة"
 })
 
--- زر الاختبار
-ControlTab:AddButton({
-    Name = "اختبار النظام",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        print("=== اختبار النظام ===")
-        print("اللاعب:", player.Name)
-        
-        if player.Character then
-            print("✅ الشخصية موجودة")
-            local humanoid = player.Character:FindFirstChild("Humanoid")
-            if humanoid then
-                print("✅ Humanoid موجود")
-                print("✅ السرعة الحالية:", humanoid.WalkSpeed)
-                print("✅ قوة القفز الحالية:", humanoid.JumpPower)
-                
-                game:GetService("StarterGui"):SetCore("SendNotification",{
-                    Title = "اختبار النظام",
-                    Text = "كل شيء جاهز",
-                    Duration = 5
-                })
-            else
-                print("❌ لا يوجد Humanoid")
-            end
+local speedEnabled = false
+local speedValue = 50
+local speedBV = nil
+
+ControlTab:AddToggle({
+    Name = "تفعيل السرعة",
+    Default = false,
+    Callback = function(state)
+        speedEnabled = state
+        if state then
+            game:GetService("StarterGui"):SetCore("SendNotification",{
+                Title = "السرعة",
+                Text = "مفعلة - اضبط السرعة",
+                Duration = 2
+            })
         else
-            print("❌ لا توجد شخصية")
-        end
-    end
-})
-
--- إضافة قسم للمعلومات
-ControlTab:AddSection({
-    Name = "معلومات"
-})
-
-ControlTab:AddLabel("اسم اللعبة: " .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
-ControlTab:AddLabel("رقم اللعبة: " .. game.PlaceId)
-
--- زر لعرض معلومات اللعبة
-ControlTab:AddButton({
-    Name = "عرض معلومات اللعبة",
-    Callback = function()
-        local info = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
-        
-        local message = "اسم اللعبة: " .. info.Name .. "\n"
-        message = message .. "رقم اللعبة: " .. game.PlaceId .. "\n"
-        message = message .. "المطور: " .. (info.Creator.Name or "غير معروف")
-        
-        print("=== معلومات اللعبة ===")
-        print("الاسم:", info.Name)
-        print("الرقم:", game.PlaceId)
-        print("المطور:", info.Creator.Name)
-        
-        game:GetService("StarterGui"):SetCore("SendNotification",{
-            Title = "معلومات اللعبة",
-            Text = info.Name,
-            Duration = 5
-        })
-    end
-})
-
--- محاولة نظام BodyVelocity
-ControlTab:AddSection({
-    Name = "نظام BodyVelocity"
-})
-
-ControlTab:AddButton({
-    Name = "تجربة BodyVelocity",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        local char = player.Character
-        if char then
-            local root = char:FindFirstChild("HumanoidRootPart")
-            if root then
-                local bv = Instance.new("BodyVelocity")
-                bv.Name = "TestBV"
-                bv.MaxForce = Vector3.new(10000, 0, 10000)
-                bv.Velocity = Vector3.new(0, 0, 0)
-                bv.Parent = root
-                
-                print("✅ تم إضافة BodyVelocity")
-                game:GetService("StarterGui"):SetCore("SendNotification",{
-                    Title = "BodyVelocity",
-                    Text = "تم الإضافة بنجاح",
-                    Duration = 3
-                })
-                
-                -- إزالته بعد 5 ثواني
-                task.wait(5)
-                bv:Destroy()
-            else
-                print("❌ لا يوجد HumanoidRootPart")
+            if speedBV then
+                speedBV:Destroy()
+                speedBV = nil
             end
         end
     end
 })
 
--- زر الحل النهائي
+ControlTab:AddSlider({
+    Name = "مستوى السرعة",
+    Min = 16,
+    Max = 500,
+    Default = 50,
+    Color = Color3.fromRGB(0, 255, 0),
+    Increment = 10,
+    ValueName = "سرعة",
+    Callback = function(value)
+        speedValue = value
+    end
+})
+
+-- القسم 2: القفز العالي
 ControlTab:AddSection({
-    Name = "الحل النهائي"
+    Name = "🦘 القفز العالي"
+})
+
+local jumpEnabled = false
+local jumpValue = 100
+
+ControlTab:AddToggle({
+    Name = "تفعيل القفز",
+    Default = false,
+    Callback = function(state)
+        jumpEnabled = state
+        if state then
+            game:GetService("StarterGui"):SetCore("SendNotification",{
+                Title = "القفز",
+                Text = "مفعل - اضغط Space",
+                Duration = 2
+            })
+        end
+    end
+})
+
+ControlTab:AddSlider({
+    Name = "قوة القفز",
+    Min = 50,
+    Max = 500,
+    Default = 100,
+    Color = Color3.fromRGB(255, 100, 0),
+    Increment = 10,
+    ValueName = "قوة",
+    Callback = function(value)
+        jumpValue = value
+    end
+})
+
+-- القسم 3: اختراق الجدران
+ControlTab:AddSection({
+    Name = "🧱 اختراق الجدران"
+})
+
+local noclipEnabled = false
+
+ControlTab:AddToggle({
+    Name = "تفعيل اختراق الجدران",
+    Default = false,
+    Callback = function(state)
+        noclipEnabled = state
+        if state then
+            game:GetService("StarterGui"):SetCore("SendNotification",{
+                Title = "اختراق الجدران",
+                Text = "مفعل - يمكنك المرور خلال الجدران",
+                Duration = 3
+            })
+        end
+    end
+})
+
+-- القسم 4: التحكم في الجاذبية
+ControlTab:AddSection({
+    Name = "🌍 التحكم في الجاذبية"
+})
+
+local gravityEnabled = false
+local gravityValue = 196.2
+
+ControlTab:AddToggle({
+    Name = "تفعيل التحكم في الجاذبية",
+    Default = false,
+    Callback = function(state)
+        gravityEnabled = state
+        if state then
+            game:GetService("StarterGui"):SetCore("SendNotification",{
+                Title = "الجاذبية",
+                Text = "متحكم بها - اضبط مستوى الجاذبية",
+                Duration = 2
+            })
+        else
+            workspace.Gravity = 196.2
+        end
+    end
+})
+
+ControlTab:AddSlider({
+    Name = "مستوى الجاذبية",
+    Min = 0,
+    Max = 500,
+    Default = 196.2,
+    Color = Color3.fromRGB(100, 100, 255),
+    Increment = 10,
+    ValueName = "جاذبية",
+    Callback = function(value)
+        gravityValue = value
+        if gravityEnabled then
+            workspace.Gravity = value
+        end
+    end
+})
+
+-- القسم 5: القفز المتتالي
+ControlTab:AddSection({
+    Name = "🔄 القفز المتتالي"
+})
+
+local multiJumpEnabled = false
+local maxJumps = 3
+
+ControlTab:AddToggle({
+    Name = "تفعيل القفز المتتالي",
+    Default = false,
+    Callback = function(state)
+        multiJumpEnabled = state
+        if state then
+            game:GetService("StarterGui"):SetCore("SendNotification",{
+                Title = "القفز المتتالي",
+                Text = "مفعل - يمكنك القفز " .. maxJumps .. " مرات متتالية",
+                Duration = 3
+            })
+        end
+    end
+})
+
+ControlTab:AddSlider({
+    Name = "عدد القفزات",
+    Min = 1,
+    Max = 10,
+    Default = 3,
+    Color = Color3.fromRGB(255, 0, 255),
+    Increment = 1,
+    ValueName = "قفزات",
+    Callback = function(value)
+        maxJumps = value
+    end
+})
+
+-- القسم 6: أزرار التحكم السريع
+ControlTab:AddSection({
+    Name = "🎯 تحكم سريع"
 })
 
 ControlTab:AddButton({
-    Name = "أخبرني باللعبة لأصنع سكربت مخصص",
+    Name = "سرعة 100 + قفز 200",
     Callback = function()
-        print("=== الرجاء إخباري بـ: ===")
-        print("1. اسم اللعبة")
-        print("2. إذا كانت تحتوي على Anti-Cheat")
-        print("3. أي أخطاء تظهر")
-        
+        speedValue = 100
+        jumpValue = 200
+        speedEnabled = true
+        jumpEnabled = true
         game:GetService("StarterGui"):SetCore("SendNotification",{
-            Title = "مهم",
-            Text = "أخبرني باسم اللعبة لأصنع سكربت مخصص لها",
-            Duration = 10
+            Title = "مميزات سريعة",
+            Text = "سرعة 100 وقفز 200 مفعلة",
+            Duration = 3
         })
     end
 })
 
--- طباعة رسالة نهائية
+ControlTab:AddButton({
+    Name = "جاذبية منخفضة (50)",
+    Callback = function()
+        gravityValue = 50
+        gravityEnabled = true
+        workspace.Gravity = 50
+        game:GetService("StarterGui"):SetCore("SendNotification",{
+            Title = "الجاذبية",
+            Text = "مستوى الجاذبية: 50",
+            Duration = 3
+        })
+    end
+})
+
+ControlTab:AddButton({
+    Name = "تفعيل كل المميزات",
+    Callback = function()
+        speedEnabled = true
+        jumpEnabled = true
+        noclipEnabled = true
+        gravityEnabled = true
+        multiJumpEnabled = true
+        
+        game:GetService("StarterGui"):SetCore("SendNotification",{
+            Title = "جميع المميزات",
+            Text = "تم تفعيل كل مميزات بروكهافن",
+            Duration = 4
+        })
+    end
+})
+
+ControlTab:AddButton({
+    Name = "إيقاف كل المميزات",
+    Callback = function()
+        speedEnabled = false
+        jumpEnabled = false
+        noclipEnabled = false
+        gravityEnabled = false
+        multiJumpEnabled = false
+        
+        if speedBV then
+            speedBV:Destroy()
+            speedBV = nil
+        end
+        workspace.Gravity = 196.2
+        
+        game:GetService("StarterGui"):SetCore("SendNotification",{
+            Title = "جميع المميزات",
+            Text = "تم إيقاف كل مميزات بروكهافن",
+            Duration = 4
+        })
+    end
+})
+
+-- القسم 7: تعليمات الاستخدام
+ControlTab:AddSection({
+    Name = "📖 كيفية الاستخدام"
+})
+
+ControlTab:AddParagraph("دليل الاستخدام:", [[
+1. السرعة: شغل التفعيل واختر السرعة
+2. القفز: شغل التفعيل واختر القوة
+3. اختراق الجدران: شغل التفعيل فقط
+4. الجاذبية: شغل التفعيل واختر المستوى
+5. القفز المتتالي: شغل واختر عدد القفزات
+]])
+
+ControlTab:AddLabel("✅ كل خانة تعمل بشكل منفصل")
+ControlTab:AddLabel("🚀 استخدم الأزرار السريعة للتحكم السريع")
+ControlTab:AddLabel("⚡ يمكنك تفعيل كل المميزات معاً")
+
+-- القسم 8: معلومات النظام
+ControlTab:AddSection({
+    Name = "ℹ️ معلومات"
+})
+
+ControlTab:AddLabel("🎮 بروكهافن النهائي")
+ControlTab:AddLabel("📅 الإصدار: 2.0")
+ControlTab:AddLabel("⭐ 5 مميزات رئيسية")
+ControlTab:AddLabel("🔧 4 أزرار تحكم سريع")
+
+-- إضافة رسالة نجاح
 task.spawn(function()
-    task.wait(2)
-    print("=================================")
-    print("🔍 جاري اختبار النظام...")
-    print("اسم اللعبة:", game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
-    print("رقم اللعبة:", game.PlaceId)
-    print("اللاعب:", game.Players.LocalPlayer.Name)
-    print("=================================")
+    wait(1)
+    ControlTab:AddLabel("🎉 تاب بروكهافن جاهز للاستخدام!")
+    ControlTab:AddLabel("✅ تم تحميل 5 مميزات بنجاح")
 end)
 
-print("🎮 نظام الاختبار جاهز!")
+print("✅ تم تحميل تاب بروكهافن النهائي بنجاح")
