@@ -7087,7 +7087,6 @@ local UniversalTab = Window:MakeTab({"مضادات", "plane"})
 Section = UniversalTab:AddSection({
     Name = "مضادات"
 })
-InfoTab:AddParagraph({ "المالك / المطور:", "DBLACK (" })
 
 UniversalTab:AddButton({
   Name = "مضاد فلنق",
