@@ -7088,9 +7088,6 @@ Section = UniversalTab:AddSection({
     Name = "مضادات"
 })
 
-TrollTab:AddButton({
-
-  ChildTab:AddParagraph({"معلومة:", "هنا تبعث عفاريت للناس."}
 UniversalTab:AddButton({
   Name = "مضاد فلنق",
   Callback = function()
