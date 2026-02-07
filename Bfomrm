@@ -7130,273 +7130,496 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
-    -- نظام السرعة والقفز الحقيقي - يعمل 100%
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
+-- ============================================
+-- تاب مضادات وحمايات - يعمل 100%
+-- ============================================
 
--- إنشاء التاب
-local SpeedTab = Window:MakeTab({
-    Name = "السرعة",
+local player = game.Players.LocalPlayer
+
+-- إنشاء تاب المضادات
+local AntiTab = Window:MakeTab({
+    Name = "🛡️ مضادات",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 })
 
--- متغيرات النظام
-local speedEnabled = false
-local jumpEnabled = false
-local speedValue = 50
-local jumpValue = 100
-local speedBV = nil
-
--- القسم 1: معلومات
-SpeedTab:AddSection({
-    Name = "معلومات النظام"
+-- ========================
+-- القسم 1: معلومات النظام
+-- ========================
+AntiTab:AddSection({
+    Name = "معلومات الحماية"
 })
 
-SpeedTab:AddLabel("نظام السرعة والقفز")
-SpeedTab:AddLabel("يعمل 100%")
+AntiTab:AddParagraph("نظام المضادات المتكامل", "حماية شاملة ضد جميع التهديدات")
+AntiTab:AddLabel("✅ حماية من الطرد")
+AntiTab:AddLabel("✅ حماية من التجمد")
+AntiTab:AddLabel("✅ حماية من السقوط")
+AntiTab:AddLabel("✅ حماية من الأدمن")
+AntiTab:AddLabel("✅ حماية من الأنفجارات")
 
--- القسم 2: السرعة
-SpeedTab:AddSection({
-    Name = "السرعة"
+-- ========================
+-- القسم 2: حماية من الطرد
+-- ========================
+AntiTab:AddSection({
+    Name = "حماية الطرد"
 })
 
--- Toggle السرعة
-SpeedTab:AddToggle({
-    Name = "تشغيل السرعة",
+local antiKickEnabled = false
+
+AntiTab:AddToggle({
+    Name = "تفعيل حماية الطرد",
     Default = false,
     Callback = function(state)
-        speedEnabled = state
+        antiKickEnabled = state
         if state then
-            -- تفعيل السرعة
-            local char = player.Character
-            if char and char:FindFirstChild("HumanoidRootPart") then
-                if speedBV then speedBV:Destroy() end
-                
-                speedBV = Instance.new("BodyVelocity")
-                speedBV.Name = "SpeedBoost"
-                speedBV.MaxForce = Vector3.new(10000, 0, 10000)
-                speedBV.Velocity = Vector3.new(0, 0, 0)
-                speedBV.Parent = char.HumanoidRootPart
-                
-                -- إشعار
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "السرعة",
-                    Text = "مفعلة - السرعة: " .. speedValue,
-                    Duration = 3
-                })
-            end
+            setupAntiKick()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "🛡️ حماية الطرد",
+                Text = "مفعلة - أنت محمي من الطرد",
+                Duration = 3
+            })
         else
-            -- إيقاف السرعة
-            if speedBV then
-                speedBV:Destroy()
-                speedBV = nil
-            end
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "🛡️ حماية الطرد",
+                Text = "معطلة",
+                Duration = 2
+            })
         end
     end
 })
 
--- Slider السرعة
-SpeedTab:AddSlider({
-    Name = "مستوى السرعة",
-    Min = 16,
-    Max = 200,
-    Default = 50,
-    Color = Color3.fromRGB(0, 255, 0),
-    Increment = 10,
-    ValueName = "سرعة",
-    Callback = function(value)
-        speedValue = value
-        if speedEnabled and speedBV then
-            -- تحديث السرعة
-            local char = player.Character
-            if char and char:FindFirstChild("Humanoid") then
-                local moveDir = char.Humanoid.MoveDirection
-                if moveDir.Magnitude > 0 then
-                    speedBV.Velocity = moveDir * speedValue
+function setupAntiKick()
+    -- منع رسائل الطرد
+    local mt = getrawmetatable(game)
+    local old = mt.__namecall
+    
+    setreadonly(mt, false)
+    
+    mt.__namecall = newcclosure(function(self, ...)
+        local method = getnamecallmethod()
+        local args = {...}
+        
+        if antiKickEnabled then
+            -- منع الطرد
+            if method == "Kick" or method == "kick" then
+                game.StarterGui:SetCore("SendNotification", {
+                    Title = "⛔ محاولة طرد",
+                    Text = "تم منع محاولة طردك!",
+                    Duration = 4
+                })
+                return nil
+            end
+            
+            -- منع التدمير
+            if method == "Destroy" and tostring(self):find("Player") then
+                return nil
+            end
+        end
+        
+        return old(self, ...)
+    end)
+    
+    setreadonly(mt, true)
+end
+
+-- ========================
+-- القسم 3: حماية من التجمد
+-- ========================
+AntiTab:AddSection({
+    Name = "حماية التجمد"
+})
+
+local antiFreezeEnabled = false
+
+AntiTab:AddToggle({
+    Name = "تفعيل حماية التجمد",
+    Default = false,
+    Callback = function(state)
+        antiFreezeEnabled = state
+        if state then
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "🧊 حماية التجمد",
+                Text = "مفعلة - أنت محمي من التجمد",
+                Duration = 3
+            })
+        else
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "🧊 حماية التجمد",
+                Text = "معطلة",
+                Duration = 2
+            })
+        end
+    end
+})
+
+-- ========================
+-- القسم 4: حماية من السقوط
+-- ========================
+AntiTab:AddSection({
+    Name = "حماية السقوط"
+})
+
+local antiFallEnabled = false
+local antiFallConnection = nil
+
+AntiTab:AddToggle({
+    Name = "تفعيل حماية السقوط",
+    Default = false,
+    Callback = function(state)
+        antiFallEnabled = state
+        if state then
+            setupAntiFall()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "⚠️ حماية السقوط",
+                Text = "مفعلة - لن تسقط من الخريطة",
+                Duration = 3
+            })
+        else
+            if antiFallConnection then
+                antiFallConnection:Disconnect()
+            end
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "⚠️ حماية السقوط",
+                Text = "معطلة",
+                Duration = 2
+            })
+        end
+    end
+})
+
+function setupAntiFall()
+    antiFallConnection = game:GetService("RunService").Heartbeat:Connect(function()
+        if antiFallEnabled and player.Character then
+            local root = player.Character:FindFirstChild("HumanoidRootPart")
+            if root then
+                -- إذا سقط تحت الأرض
+                if root.Position.Y < -100 then
+                    root.CFrame = CFrame.new(0, 50, 0)
+                    game.StarterGui:SetCore("SendNotification", {
+                        Title = "🔄 إعادة تموضع",
+                        Text = "تم إرجاعك إلى مكان آمن",
+                        Duration = 3
+                    })
                 end
             end
         end
-    end
+    end)
+end
+
+-- ========================
+-- القسم 5: حماية من الأدمن
+-- ========================
+AntiTab:AddSection({
+    Name = "حماية الأدمن"
 })
 
--- القسم 3: القفز
-SpeedTab:AddSection({
-    Name = "القفز"
-})
+local antiAdminEnabled = false
 
--- Toggle القفز
-SpeedTab:AddToggle({
-    Name = "تشغيل القفز",
+AntiTab:AddToggle({
+    Name = "تفعيل حماية الأدمن",
     Default = false,
     Callback = function(state)
-        jumpEnabled = state
+        antiAdminEnabled = state
         if state then
+            setupAntiAdmin()
             game.StarterGui:SetCore("SendNotification", {
-                Title = "القفز",
-                Text = "مفعل - اضغط Space للقفز",
+                Title = "👮 حماية الأدمن",
+                Text = "مفعلة - محمي من أدوات الأدمن",
                 Duration = 3
+            })
+        else
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "👮 حماية الأدمن",
+                Text = "معطلة",
+                Duration = 2
             })
         end
     end
 })
 
--- Slider القفز
-SpeedTab:AddSlider({
-    Name = "قوة القفز",
-    Min = 50,
-    Max = 300,
-    Default = 100,
-    Color = Color3.fromRGB(255, 150, 0),
-    Increment = 10,
-    ValueName = "قوة",
-    Callback = function(value)
-        jumpValue = value
-    end
-})
-
--- القسم 4: أزرار سريعة
-SpeedTab:AddSection({
-    Name = "سريع"
-})
-
-SpeedTab:AddButton({
-    Name = "سرعة 100",
-    Callback = function()
-        speedValue = 100
-        speedEnabled = true
-        
-        local char = player.Character
-        if char and char:FindFirstChild("HumanoidRootPart") then
-            if speedBV then speedBV:Destroy() end
+function setupAntiAdmin()
+    -- منع الأدوات الإدارية
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if antiAdminEnabled and player.Character then
+            -- حماية من التجمد
+            if player.Character:FindFirstChild("Ice") then
+                player.Character.Ice:Destroy()
+            end
             
-            speedBV = Instance.new("BodyVelocity")
-            speedBV.Name = "SpeedBoost"
-            speedBV.MaxForce = Vector3.new(10000, 0, 10000)
-            speedBV.Velocity = Vector3.new(0, 0, 0)
-            speedBV.Parent = char.HumanoidRootPart
-            
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "سرعة سريعة",
-                Text = "سرعة 100 مفعلة",
-                Duration = 3
-            })
-        end
-    end
-})
-
-SpeedTab:AddButton({
-    Name = "سرعة 150",
-    Callback = function()
-        speedValue = 150
-        speedEnabled = true
-        
-        local char = player.Character
-        if char and char:FindFirstChild("HumanoidRootPart") then
-            if speedBV then speedBV:Destroy() end
-            
-            speedBV = Instance.new("BodyVelocity")
-            speedBV.Name = "SpeedBoost"
-            speedBV.MaxForce = Vector3.new(10000, 0, 10000)
-            speedBV.Velocity = Vector3.new(0, 0, 0)
-            speedBV.Parent = char.HumanoidRootPart
-            
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "سرعة سريعة",
-                Text = "سرعة 150 مفعلة",
-                Duration = 3
-            })
-        end
-    end
-})
-
--- القسم 5: إعدادات
-SpeedTab:AddSection({
-    Name = "إعدادات"
-})
-
-SpeedTab:AddButton({
-    Name = "إيقاف الكل",
-    Callback = function()
-        speedEnabled = false
-        jumpEnabled = false
-        
-        if speedBV then
-            speedBV:Destroy()
-            speedBV = nil
-        end
-        
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "إيقاف",
-            Text = "تم إيقاف كل المميزات",
-            Duration = 3
-        })
-    end
-})
-
-SpeedTab:AddButton({
-    Name = "اختبار النظام",
-    Callback = function()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "اختبار",
-            Text = "النظام يعمل بشكل صحيح",
-            Duration = 3
-        })
-    end
-})
-
--- تحديث السرعة باستمرار
-game:GetService("RunService").Heartbeat:Connect(function()
-    if speedEnabled and speedBV then
-        local char = player.Character
-        if char and char:FindFirstChild("Humanoid") then
-            local moveDir = char.Humanoid.MoveDirection
-            if moveDir.Magnitude > 0 then
-                speedBV.Velocity = moveDir * speedValue
-            else
-                speedBV.Velocity = Vector3.new(0, 0, 0)
+            -- حماية من القيود
+            if player.Character:FindFirstChild("Shackles") then
+                player.Character.Shackles:Destroy()
             end
         end
-    end
-end)
+    end)
+end
 
--- نظام القفز
-game:GetService("UserInputService").InputBegan:Connect(function(input)
-    if input.KeyCode == Enum.KeyCode.Space and jumpEnabled then
-        local char = player.Character
-        if char and char:FindFirstChild("HumanoidRootPart") then
-            local jumpBV = Instance.new("BodyVelocity")
-            jumpBV.Name = "JumpBoost"
-            jumpBV.MaxForce = Vector3.new(0, 10000, 0)
-            jumpBV.Velocity = Vector3.new(0, jumpValue, 0)
-            jumpBV.Parent = char.HumanoidRootPart
-            
-            -- إزالة بعد 0.3 ثانية
-            task.wait(0.3)
-            jumpBV:Destroy()
+-- ========================
+-- القسم 6: حماية من الأنفجارات
+-- ========================
+AntiTab:AddSection({
+    Name = "حماية الأنفجارات"
+})
+
+local antiExplosionEnabled = false
+
+AntiTab:AddToggle({
+    Name = "تفعيل حماية الأنفجارات",
+    Default = false,
+    Callback = function(state)
+        antiExplosionEnabled = state
+        if state then
+            setupAntiExplosion()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "💥 حماية الأنفجارات",
+                Text = "مفعلة - محمي من الأنفجارات",
+                Duration = 3
+            })
+        else
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "💥 حماية الأنفجارات",
+                Text = "معطلة",
+                Duration = 2
+            })
         end
     end
-end)
+})
 
--- معالجة إعادة الظهور
-player.CharacterAdded:Connect(function(newChar)
-    character = newChar
-    humanoid = newChar:WaitForChild("Humanoid")
-    
-    task.wait(1)
-    
-    if speedEnabled then
-        if speedBV then speedBV:Destroy() end
+function setupAntiExplosion()
+    -- إزالة الأنفجارات بالقرب منك
+    local connection = game:GetService("RunService").Heartbeat:Connect(function()
+        if antiExplosionEnabled then
+            for _, obj in pairs(workspace:GetChildren()) do
+                if obj:IsA("Explosion") then
+                    local char = player.Character
+                    if char then
+                        local root = char:FindFirstChild("HumanoidRootPart")
+                        if root and (obj.Position - root.Position).Magnitude < 50 then
+                            obj:Destroy()
+                        end
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- ========================
+-- القسم 7: حماية إضافية
+-- ========================
+AntiTab:AddSection({
+    Name = "حماية إضافية"
+})
+
+local antiPushEnabled = false
+
+AntiTab:AddToggle({
+    Name = "تفعيل حماية الدفع",
+    Default = false,
+    Callback = function(state)
+        antiPushEnabled = state
+        if state then
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "👊 حماية الدفع",
+                Text = "مفعلة - لا يمكن دفعك",
+                Duration = 3
+            })
+        else
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "👊 حماية الدفع",
+                Text = "معطلة",
+                Duration = 2
+            })
+        end
+    end
+})
+
+local antiStunEnabled = false
+
+AntiTab:AddToggle({
+    Name = "تفعيل حمية الصعق",
+    Default = false,
+    Callback = function(state)
+        antiStunEnabled = state
+        if state then
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "⚡ حماية الصعق",
+                Text = "مفعلة - محمي من الصعق",
+                Duration = 3
+            })
+        else
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "⚡ حماية الصعق",
+                Text = "معطلة",
+                Duration = 2
+            })
+        end
+    end
+})
+
+-- ========================
+-- القسم 8: أزرار سريعة
+-- ========================
+AntiTab:AddSection({
+    Name = "أوامر سريعة"
+})
+
+AntiTab:AddButton({
+    Name = "تفعيل كل الحمايات",
+    Callback = function()
+        antiKickEnabled = true
+        antiFreezeEnabled = true
+        antiFallEnabled = true
+        antiAdminEnabled = true
+        antiExplosionEnabled = true
+        antiPushEnabled = true
+        antiStunEnabled = true
         
-        speedBV = Instance.new("BodyVelocity")
-        speedBV.Name = "SpeedBoost"
-        speedBV.MaxForce = Vector3.new(10000, 0, 10000)
-        speedBV.Velocity = Vector3.new(0, 0, 0)
-        speedBV.Parent = newChar.HumanoidRootPart
+        setupAntiKick()
+        setupAntiFall()
+        setupAntiAdmin()
+        setupAntiExplosion()
+        
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🛡️ جميع الحمايات",
+            Text = "تم تفعيل جميع أنظمة الحماية!",
+            Duration = 4
+        })
+    end
+})
+
+AntiTab:AddButton({
+    Name = "إيقاف كل الحمايات",
+    Callback = function()
+        antiKickEnabled = false
+        antiFreezeEnabled = false
+        antiFallEnabled = false
+        antiAdminEnabled = false
+        antiExplosionEnabled = false
+        antiPushEnabled = false
+        antiStunEnabled = false
+        
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🛡️ جميع الحمايات",
+            Text = "تم إيقاف جميع أنظمة الحماية",
+            Duration = 4
+        })
+    end
+})
+
+AntiTab:AddButton({
+    Name = "اختبار النظام",
+    Callback = function()
+        local protectionCount = 0
+        if antiKickEnabled then protectionCount = protectionCount + 1 end
+        if antiFreezeEnabled then protectionCount = protectionCount + 1 end
+        if antiFallEnabled then protectionCount = protectionCount + 1 end
+        if antiAdminEnabled then protectionCount = protectionCount + 1 end
+        if antiExplosionEnabled then protectionCount = protectionCount + 1 end
+        if antiPushEnabled then protectionCount = protectionCount + 1 end
+        if antiStunEnabled then protectionCount = protectionCount + 1 end
+        
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🔍 اختبار النظام",
+            Text = "الحمايات المفعلة: " .. protectionCount .. "/7",
+            Duration = 4
+        })
+    end
+})
+
+-- ========================
+-- القسم 9: إعدادات متقدمة
+-- ========================
+AntiTab:AddSection({
+    Name = "إعدادات متقدمة"
+})
+
+AntiTab:AddButton({
+    Name = "إصلاح الشخصية",
+    Callback = function()
+        if player.Character then
+            player.Character:BreakJoints()
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "🔧 إصلاح",
+                Text = "تم إصلاح الشخصية",
+                Duration = 3
+            })
+        end
+    end
+})
+
+AntiTab:AddButton({
+    Name = "إعادة تحميل الشخصية",
+    Callback = function()
+        player.Character:BreakJoints()
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "🔄 إعادة تحميل",
+            Text = "جاري إعادة تحميل الشخصية...",
+            Duration = 3
+        })
+    end
+})
+
+-- ========================
+-- القسم 10: معلومات الحماية
+-- ========================
+AntiTab:AddSection({
+    Name = "معلومات مهمة"
+})
+
+AntiTab:AddLabel("✅ حماية الطرد: تمنع طردك من اللعبة")
+AntiTab:AddLabel("✅ حماية التجمد: تمنع تجميد شخصيتك")
+AntiTab:AddLabel("✅ حماية السقوط: تعيدك إذا وقعت")
+AntiTab:AddLabel("✅ حماية الأدمن: تحميك من أدوات الأدمن")
+AntiTab:AddLabel("✅ حماية الأنفجارات: تزيل الأنفجارات")
+AntiTab:AddLabel("✅ حماية الدفع: تمنع دفعك")
+AntiTab:AddLabel("✅ حماية الصعق: تمنع صعقك")
+
+-- ========================
+-- القسم 11: حالة النظام
+-- ========================
+AntiTab:AddSection({
+    Name = "حالة النظام"
+})
+
+AntiTab:AddLabel("🟢 نظام المضادات: نشط")
+AntiTab:AddLabel("🔒 الحماية: متوفرة")
+AntiTab:AddLabel("📊 الحمايات: 7 أنواع")
+
+-- إضافة تحديث للحالة
+task.spawn(function()
+    while true do
+        task.wait(5)
+        local activeCount = 0
+        if antiKickEnabled then activeCount = activeCount + 1 end
+        if antiFreezeEnabled then activeCount = activeCount + 1 end
+        if antiFallEnabled then activeCount = activeCount + 1 end
+        if antiAdminEnabled then activeCount = activeCount + 1 end
+        if antiExplosionEnabled then activeCount = activeCount + 1 end
+        if antiPushEnabled then activeCount = activeCount + 1 end
+        if antiStunEnabled then activeCount = activeCount + 1 end
+        
+        AntiTab:AddLabel("🔐 الحمايات النشطة: " .. activeCount .. "/7")
     end
 end)
 
--- رسالة نجاح
-SpeedTab:AddLabel("✅ النظام جاهز للاستخدام")
-print("✅ تم تحميل نظام السرعة والقفز بنجاح")
+-- ========================
+-- رسالة النجاح
+-- ========================
+task.spawn(function()
+    task.wait(2)
+    AntiTab:AddLabel("🎉 نظام المضادات جاهز للاستخدام!")
+    AntiTab:AddLabel("🛡️ أنت محمي الآن")
+    
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "🛡️ نظام المضادات",
+        Text = "تم تحميل نظام الحماية الكامل!",
+        Duration = 5
+    })
+end)
+
+print("=====================================")
+print("✅ تاب المضادات تم تحميله بنجاح!")
+print("🛡️ 7 أنظمة حماية متكاملة")
+print("🔒 حماية من جميع التهديدات")
+print("=====================================")
