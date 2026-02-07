@@ -7128,8 +7128,11 @@ UniversalTab:AddButton({
   Callback = function()
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'),true))()
  end,
-})
 
+
+})-- ========================================
+-- كود تاب المضادات الكامل فقط
+-- ========================================
 
 local ProtectionTab = Window:MakeTab({
     Name = "مضادات",
@@ -7232,3 +7235,5 @@ ProtectionTab:AddToggle({
         end)
     end
 })
+
+print("تم تحميل تاب المضادات")
