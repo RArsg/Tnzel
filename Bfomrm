@@ -7085,7 +7085,7 @@ local UniversalTab = Window:MakeTab({"مضادات", "plane"})
 
 -- Seção para Scripts Universais
 Section = UniversalTab:AddSection({
-    Name = "مضادات"
+    Name = " مضادات سكربتات من صنعي"
 })
 
 UniversalTab:AddButton({
@@ -7130,28 +7130,330 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
--- تاب مضادات مع مضاد جلوس
+-- تاب مضادات مع أيقونات وإصلاح
 local player = game.Players.LocalPlayer
 
 local AntiTab = Window:MakeTab({
     Name = "مضادات",
-    Icon = "rbxassetid://4483345998"
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
 })
 
--- حماية الطرد
+-- إضافة قسم للتحذير
+AntiTab:AddSection({
+    Name = "⚠️ انتبه"
+})
+
+AntiTab:AddLabel("لا تشغل كل المضادات معاً")
+AntiTab:AddLabel("تشغيل واحد أو اثنين فقط")
+
+-- ========================
+-- 1. مضاد الطرد 🚫
+-- ========================
 local antiKickOn = false
+local kickConnection = nil
+
 AntiTab:AddToggle({
-    Name = "حماية الطرد",
+    Name = "🚫 مضاد الطرد",
     Default = false,
     Callback = function(state)
         antiKickOn = state
         if state then
+            -- إزالة الاتصال القديم إذا كان موجود
+            if kickConnection then
+                kickConnection:Disconnect()
+            end
+            
+            -- طريقة آمنة لمنع الطرد
+            kickConnection = game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function()
+                task.wait(1)
+                if antiKickOn then
+                    pcall(function()
+                        local mt = getrawmetatable(game)
+                        local old = mt.__namecall
+                        setreadonly(mt, false)
+                        mt.__namecall = newcclosure(function(self, ...)
+                            local method = getnamecallmethod()
+                            if method:lower() == "kick" and antiKickOn then
+                                warn("⛔ تم منع محاولة طرد")
+                                return nil
+                            end
+                            return old(self, ...)
+                        end)
+                        setreadonly(mt, true)
+                    end)
+                end
+            end)
+        else
+            if kickConnection then
+                kickConnection:Disconnect()
+                kickConnection = nil
+            end
+        end
+    end
+})
+
+-- ========================
+-- 2. مضاد التجمد ❄️
+-- ========================
+local antiFreezeOn = false
+local freezeConnection = nil
+
+AntiTab:AddToggle({
+    Name = "❄️ مضاد التجمد",
+    Default = false,
+    Callback = function(state)
+        antiFreezeOn = state
+        if state then
+            if freezeConnection then
+                freezeConnection:Disconnect()
+            end
+            
+            freezeConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if antiFreezeOn and player.Character then
+                    pcall(function()
+                        -- البحث عن آثار تجمد
+                        for _, child in pairs(player.Character:GetChildren()) do
+                            if child.Name:lower():find("ice") or child.Name:lower():find("freeze") then
+                                child:Destroy()
+                            end
+                        end
+                        
+                        -- تحقق من Humanoid
+                        local humanoid = player.Character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid.PlatformStand = false
+                        end
+                    end)
+                end
+            end)
+        else
+            if freezeConnection then
+                freezeConnection:Disconnect()
+                freezeConnection = nil
+            end
+        end
+    end
+})
+
+-- ========================
+-- 3. مضاد السقوط ⚠️
+-- ========================
+local antiFallOn = false
+local fallConnection = nil
+
+AntiTab:AddToggle({
+    Name = "⚠️ مضاد السقوط",
+    Default = false,
+    Callback = function(state)
+        antiFallOn = state
+        if state then
+            if fallConnection then
+                fallConnection:Disconnect()
+            end
+            
+            fallConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if antiFallOn and player.Character then
+                    pcall(function()
+                        local root = player.Character:FindFirstChild("HumanoidRootPart")
+                        if root and root.Position.Y < -500 then
+                            root.CFrame = CFrame.new(0, 100, 0)
+                        end
+                    end)
+                end
+            end)
+        else
+            if fallConnection then
+                fallConnection:Disconnect()
+                fallConnection = nil
+            end
+        end
+    end
+})
+
+-- ========================
+-- 4. مضاد الجلوس 🚫🪑
+-- ========================
+local antiSitOn = false
+local sitConnection = nil
+
+AntiTab:AddToggle({
+    Name = "🚫🪑 مضاد جلوس",
+    Default = false,
+    Callback = function(state)
+        antiSitOn = state
+        if state then
+            if sitConnection then
+                sitConnection:Disconnect()
+            end
+            
+            sitConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if antiSitOn and player.Character then
+                    pcall(function()
+                        local humanoid = player.Character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            -- منع الجلوس
+                            humanoid.Sit = false
+                            
+                            -- الخروج من الكراسي
+                            for _, seat in pairs(workspace:GetDescendants()) do
+                                if (seat:IsA("Seat") or seat:IsA("VehicleSeat")) and seat.Occupant == humanoid then
+                                    humanoid.Sit = false
+                                    task.wait(0.1)
+                                end
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            if sitConnection then
+                sitConnection:Disconnect()
+                sitConnection = nil
+            end
+        end
+    end
+})
+
+-- ========================
+-- 5. مضاد الأنفجارات 💥
+-- ========================
+local antiExplosionOn = false
+local explosionConnection = nil
+
+AntiTab:AddToggle({
+    Name = "💥 مضاد أنفجارات",
+    Default = false,
+    Callback = function(state)
+        antiExplosionOn = state
+        if state then
+            if explosionConnection then
+                explosionConnection:Disconnect()
+            end
+            
+            explosionConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if antiExplosionOn then
+                    pcall(function()
+                        for _, obj in pairs(workspace:GetChildren()) do
+                            if obj:IsA("Explosion") then
+                                obj:Destroy()
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            if explosionConnection then
+                explosionConnection:Disconnect()
+                explosionConnection = nil
+            end
+        end
+    end
+})
+
+-- ========================
+-- 6. مضاد الدفع 👊
+-- ========================
+local antiPushOn = false
+local pushConnection = nil
+
+AntiTab:AddToggle({
+    Name = "👊 مضاد دفع",
+    Default = false,
+    Callback = function(state)
+        antiPushOn = state
+        if state then
+            if pushConnection then
+                pushConnection:Disconnect()
+            end
+            
+            pushConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if antiPushOn and player.Character then
+                    pcall(function()
+                        local root = player.Character:FindFirstChild("HumanoidRootPart")
+                        if root then
+                            -- تقليل قوة الدفع
+                            if root.Velocity.Magnitude > 100 then
+                                root.Velocity = root.Velocity.Unit * 50
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            if pushConnection then
+                pushConnection:Disconnect()
+                pushConnection = nil
+            end
+        end
+    end
+})
+
+-- ========================
+-- 7. مضاد الصعق ⚡
+-- ========================
+local antiStunOn = false
+local stunConnection = nil
+
+AntiTab:AddToggle({
+    Name = "⚡ مضاد صعق",
+    Default = false,
+    Callback = function(state)
+        antiStunOn = state
+        if state then
+            if stunConnection then
+                stunConnection:Disconnect()
+            end
+            
+            stunConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if antiStunOn and player.Character then
+                    pcall(function()
+                        -- إزالة آثار الصعق
+                        for _, child in pairs(player.Character:GetChildren()) do
+                            if child.Name:lower():find("stun") or child.Name:lower():find("electr") then
+                                child:Destroy()
+                            end
+                        end
+                    end)
+                end
+            end)
+        else
+            if stunConnection then
+                stunConnection:Disconnect()
+                stunConnection = nil
+            end
+        end
+    end
+})
+
+-- ========================
+-- أزرار التحكم
+-- ========================
+AntiTab:AddSection({
+    Name = "🎮 تحكم"
+})
+
+AntiTab:AddButton({
+    Name = "✅ تشغيل الآمن",
+    Callback = function()
+        -- تشغيل مضادين فقط لتجنب المشاكل
+        antiKickOn = true
+        antiFallOn = true
+        
+        -- إعادة تفعيل الاتصالات
+        if kickConnection then kickConnection:Disconnect() end
+        if fallConnection then fallConnection:Disconnect() end
+        
+        task.wait(0.5)
+        
+        -- تنشيط المضادات المحددة
+        if antiKickOn then
             local mt = getrawmetatable(game)
             local old = mt.__namecall
             setreadonly(mt, false)
             mt.__namecall = newcclosure(function(self, ...)
                 local method = getnamecallmethod()
-                if (method == "Kick" or method == "kick") and antiKickOn then
+                if method:lower() == "kick" then
                     return nil
                 end
                 return old(self, ...)
@@ -7161,156 +7463,10 @@ AntiTab:AddToggle({
     end
 })
 
--- حماية التجمد
-local antiFreezeOn = false
-AntiTab:AddToggle({
-    Name = "حماية التجمد",
-    Default = false,
-    Callback = function(state)
-        antiFreezeOn = state
-        if state then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if antiFreezeOn and player.Character then
-                    if player.Character:FindFirstChild("Ice") then
-                        player.Character.Ice:Destroy()
-                    end
-                end
-            end)
-        end
-    end
-})
-
--- حماية السقوط
-local antiFallOn = false
-AntiTab:AddToggle({
-    Name = "حماية السقوط",
-    Default = false,
-    Callback = function(state)
-        antiFallOn = state
-        if state then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if antiFallOn and player.Character then
-                    local root = player.Character:FindFirstChild("HumanoidRootPart")
-                    if root and root.Position.Y < -100 then
-                        root.CFrame = CFrame.new(0, 50, 0)
-                    end
-                end
-            end)
-        end
-    end
-})
-
--- مضاد جلوس (مهم)
-local antiSitOn = false
-AntiTab:AddToggle({
-    Name = "مضاد جلوس",
-    Default = false,
-    Callback = function(state)
-        antiSitOn = state
-        if state then
-            -- منع الجلوس
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if antiSitOn and player.Character then
-                    local humanoid = player.Character:FindFirstChild("Humanoid")
-                    if humanoid then
-                        -- منع وضعية الجلوس
-                        if humanoid.Sit then
-                            humanoid.Sit = false
-                        end
-                        
-                        -- منع وضعية الرقود
-                        if humanoid:GetState() == Enum.HumanoidStateType.Running then
-                            humanoid:ChangeState(Enum.HumanoidStateType.Running)
-                        end
-                    end
-                end
-            end)
-            
-            -- منع الكراسي
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if antiSitOn then
-                    for _, seat in pairs(workspace:GetDescendants()) do
-                        if seat:IsA("Seat") or seat:IsA("VehicleSeat") then
-                            if seat.Occupant == player.Character.Humanoid then
-                                seat:Destroy()
-                            end
-                        end
-                    end
-                end
-            end)
-        end
-    end
-})
-
--- حماية الأنفجارات
-local antiExplosionOn = false
-AntiTab:AddToggle({
-    Name = "حماية الأنفجارات",
-    Default = false,
-    Callback = function(state)
-        antiExplosionOn = state
-        if state then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if antiExplosionOn then
-                    for _, obj in pairs(workspace:GetChildren()) do
-                        if obj:IsA("Explosion") then
-                            obj:Destroy()
-                        end
-                    end
-                end
-            end)
-        end
-    end
-})
-
--- حماية الدفع
-local antiPushOn = false
-AntiTab:AddToggle({
-    Name = "حماية الدفع",
-    Default = false,
-    Callback = function(state)
-        antiPushOn = state
-        if state then
-            game:GetService("RunService").Heartbeat:Connect(function()
-                if antiPushOn and player.Character then
-                    for _, part in pairs(player.Character:GetChildren()) do
-                        if part:IsA("BasePart") then
-                            part.Velocity = Vector3.new(0, 0, 0)
-                        end
-                    end
-                end
-            end)
-        end
-    end
-})
-
--- حماية الصعق
-local antiStunOn = false
-AntiTab:AddToggle({
-    Name = "حماية الصعق",
-    Default = false,
-    Callback = function(state)
-        antiStunOn = state
-    end
-})
-
--- أزرار التحكم
 AntiTab:AddButton({
-    Name = "تشغيل الكل",
+    Name = "❌ إيقاف الكل",
     Callback = function()
-        antiKickOn = true
-        antiFreezeOn = true
-        antiFallOn = true
-        antiSitOn = true
-        antiExplosionOn = true
-        antiPushOn = true
-        antiStunOn = true
-    end
-})
-
-AntiTab:AddButton({
-    Name = "إيقاف الكل",
-    Callback = function()
+        -- إيقاف كل المضادات
         antiKickOn = false
         antiFreezeOn = false
         antiFallOn = false
@@ -7318,7 +7474,36 @@ AntiTab:AddButton({
         antiExplosionOn = false
         antiPushOn = false
         antiStunOn = false
+        
+        -- قطع جميع الاتصالات
+        local connections = {kickConnection, freezeConnection, fallConnection, sitConnection, explosionConnection, pushConnection, stunConnection}
+        for _, conn in pairs(connections) do
+            if conn then
+                conn:Disconnect()
+            end
+        end
     end
 })
 
-print("مضادات جاهزة - مع مضاد جلوس")
+AntiTab:AddButton({
+    Name = "🔧 إصلاح الشخصية",
+    Callback = function()
+        if player.Character then
+            player.Character:BreakJoints()
+        end
+    end
+})
+
+-- ========================
+-- نصائح الاستخدام
+-- ========================
+AntiTab:AddSection({
+    Name = "💡 نصائح"
+})
+
+AntiTab:AddLabel("1. لا تشغل أكثر من 2 مضاد معاً")
+AntiTab:AddLabel("2. استخدم 'تشغيل الآمن' للبدء")
+AntiTab:AddLabel("3. إذا حدث lag، استخدم 'إيقاف الكل'")
+AntiTab:AddLabel("4. 'إصلاح الشخصية' يحل معظم المشاكل")
+
+print("✅ تاب المضادات مع أيقونات جاهز!")
