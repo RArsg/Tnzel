@@ -7130,7 +7130,7 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
--- تاب مضادات - أوامر فقط
+-- تاب مضادات مع مضاد جلوس
 local player = game.Players.LocalPlayer
 
 local AntiTab = Window:MakeTab({
@@ -7146,7 +7146,6 @@ AntiTab:AddToggle({
     Callback = function(state)
         antiKickOn = state
         if state then
-            -- منع الطرد
             local mt = getrawmetatable(game)
             local old = mt.__namecall
             setreadonly(mt, false)
@@ -7201,13 +7200,45 @@ AntiTab:AddToggle({
     end
 })
 
--- حماية الأدمن
-local antiAdminOn = false
+-- مضاد جلوس (مهم)
+local antiSitOn = false
 AntiTab:AddToggle({
-    Name = "حماية الأدمن",
+    Name = "مضاد جلوس",
     Default = false,
     Callback = function(state)
-        antiAdminOn = state
+        antiSitOn = state
+        if state then
+            -- منع الجلوس
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if antiSitOn and player.Character then
+                    local humanoid = player.Character:FindFirstChild("Humanoid")
+                    if humanoid then
+                        -- منع وضعية الجلوس
+                        if humanoid.Sit then
+                            humanoid.Sit = false
+                        end
+                        
+                        -- منع وضعية الرقود
+                        if humanoid:GetState() == Enum.HumanoidStateType.Running then
+                            humanoid:ChangeState(Enum.HumanoidStateType.Running)
+                        end
+                    end
+                end
+            end)
+            
+            -- منع الكراسي
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if antiSitOn then
+                    for _, seat in pairs(workspace:GetDescendants()) do
+                        if seat:IsA("Seat") or seat:IsA("VehicleSeat") then
+                            if seat.Occupant == player.Character.Humanoid then
+                                seat:Destroy()
+                            end
+                        end
+                    end
+                end
+            end)
+        end
     end
 })
 
@@ -7239,6 +7270,17 @@ AntiTab:AddToggle({
     Default = false,
     Callback = function(state)
         antiPushOn = state
+        if state then
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if antiPushOn and player.Character then
+                    for _, part in pairs(player.Character:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.Velocity = Vector3.new(0, 0, 0)
+                        end
+                    end
+                end
+            end)
+        end
     end
 })
 
@@ -7259,7 +7301,7 @@ AntiTab:AddButton({
         antiKickOn = true
         antiFreezeOn = true
         antiFallOn = true
-        antiAdminOn = true
+        antiSitOn = true
         antiExplosionOn = true
         antiPushOn = true
         antiStunOn = true
@@ -7272,11 +7314,11 @@ AntiTab:AddButton({
         antiKickOn = false
         antiFreezeOn = false
         antiFallOn = false
-        antiAdminOn = false
+        antiSitOn = false
         antiExplosionOn = false
         antiPushOn = false
         antiStunOn = false
     end
 })
 
-print("مضادات جاهزة")
+print("مضادات جاهزة - مع مضاد جلوس")
