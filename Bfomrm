@@ -7137,7 +7137,7 @@ local ProtectionTab = Window:MakeTab({
     PremiumOnly = false
 })
 
--- مضاد الطرد
+--1. مضاد الطرد
 ProtectionTab:AddToggle({
     Name = "مضاد طرد",
     Default = false,
@@ -7153,8 +7153,11 @@ ProtectionTab:AddToggle({
                 end
                 return old(self, ...)
             end
-            setreadonly(mt, true)
-        end
+                     setreadonly(mt, true)
+                   end
+                end
+            end
+        end)
     end
 })
 
