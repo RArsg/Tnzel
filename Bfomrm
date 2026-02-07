@@ -7130,496 +7130,153 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
--- ============================================
--- تاب مضادات وحمايات - يعمل 100%
--- ============================================
-
+-- تاب مضادات - أوامر فقط
 local player = game.Players.LocalPlayer
 
--- إنشاء تاب المضادات
 local AntiTab = Window:MakeTab({
-    Name = "🛡️ مضادات",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
+    Name = "مضادات",
+    Icon = "rbxassetid://4483345998"
 })
 
--- ========================
--- القسم 1: معلومات النظام
--- ========================
-AntiTab:AddSection({
-    Name = "معلومات الحماية"
-})
-
-AntiTab:AddParagraph("نظام المضادات المتكامل", "حماية شاملة ضد جميع التهديدات")
-AntiTab:AddLabel("✅ حماية من الطرد")
-AntiTab:AddLabel("✅ حماية من التجمد")
-AntiTab:AddLabel("✅ حماية من السقوط")
-AntiTab:AddLabel("✅ حماية من الأدمن")
-AntiTab:AddLabel("✅ حماية من الأنفجارات")
-
--- ========================
--- القسم 2: حماية من الطرد
--- ========================
-AntiTab:AddSection({
-    Name = "حماية الطرد"
-})
-
-local antiKickEnabled = false
-
+-- حماية الطرد
+local antiKickOn = false
 AntiTab:AddToggle({
-    Name = "تفعيل حماية الطرد",
+    Name = "حماية الطرد",
     Default = false,
     Callback = function(state)
-        antiKickEnabled = state
+        antiKickOn = state
         if state then
-            setupAntiKick()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "🛡️ حماية الطرد",
-                Text = "مفعلة - أنت محمي من الطرد",
-                Duration = 3
-            })
-        else
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "🛡️ حماية الطرد",
-                Text = "معطلة",
-                Duration = 2
-            })
-        end
-    end
-})
-
-function setupAntiKick()
-    -- منع رسائل الطرد
-    local mt = getrawmetatable(game)
-    local old = mt.__namecall
-    
-    setreadonly(mt, false)
-    
-    mt.__namecall = newcclosure(function(self, ...)
-        local method = getnamecallmethod()
-        local args = {...}
-        
-        if antiKickEnabled then
             -- منع الطرد
-            if method == "Kick" or method == "kick" then
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "⛔ محاولة طرد",
-                    Text = "تم منع محاولة طردك!",
-                    Duration = 4
-                })
-                return nil
-            end
-            
-            -- منع التدمير
-            if method == "Destroy" and tostring(self):find("Player") then
-                return nil
-            end
-        end
-        
-        return old(self, ...)
-    end)
-    
-    setreadonly(mt, true)
-end
-
--- ========================
--- القسم 3: حماية من التجمد
--- ========================
-AntiTab:AddSection({
-    Name = "حماية التجمد"
-})
-
-local antiFreezeEnabled = false
-
-AntiTab:AddToggle({
-    Name = "تفعيل حماية التجمد",
-    Default = false,
-    Callback = function(state)
-        antiFreezeEnabled = state
-        if state then
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "🧊 حماية التجمد",
-                Text = "مفعلة - أنت محمي من التجمد",
-                Duration = 3
-            })
-        else
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "🧊 حماية التجمد",
-                Text = "معطلة",
-                Duration = 2
-            })
-        end
-    end
-})
-
--- ========================
--- القسم 4: حماية من السقوط
--- ========================
-AntiTab:AddSection({
-    Name = "حماية السقوط"
-})
-
-local antiFallEnabled = false
-local antiFallConnection = nil
-
-AntiTab:AddToggle({
-    Name = "تفعيل حماية السقوط",
-    Default = false,
-    Callback = function(state)
-        antiFallEnabled = state
-        if state then
-            setupAntiFall()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "⚠️ حماية السقوط",
-                Text = "مفعلة - لن تسقط من الخريطة",
-                Duration = 3
-            })
-        else
-            if antiFallConnection then
-                antiFallConnection:Disconnect()
-            end
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "⚠️ حماية السقوط",
-                Text = "معطلة",
-                Duration = 2
-            })
-        end
-    end
-})
-
-function setupAntiFall()
-    antiFallConnection = game:GetService("RunService").Heartbeat:Connect(function()
-        if antiFallEnabled and player.Character then
-            local root = player.Character:FindFirstChild("HumanoidRootPart")
-            if root then
-                -- إذا سقط تحت الأرض
-                if root.Position.Y < -100 then
-                    root.CFrame = CFrame.new(0, 50, 0)
-                    game.StarterGui:SetCore("SendNotification", {
-                        Title = "🔄 إعادة تموضع",
-                        Text = "تم إرجاعك إلى مكان آمن",
-                        Duration = 3
-                    })
+            local mt = getrawmetatable(game)
+            local old = mt.__namecall
+            setreadonly(mt, false)
+            mt.__namecall = newcclosure(function(self, ...)
+                local method = getnamecallmethod()
+                if (method == "Kick" or method == "kick") and antiKickOn then
+                    return nil
                 end
-            end
-        end
-    end)
-end
-
--- ========================
--- القسم 5: حماية من الأدمن
--- ========================
-AntiTab:AddSection({
-    Name = "حماية الأدمن"
-})
-
-local antiAdminEnabled = false
-
-AntiTab:AddToggle({
-    Name = "تفعيل حماية الأدمن",
-    Default = false,
-    Callback = function(state)
-        antiAdminEnabled = state
-        if state then
-            setupAntiAdmin()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "👮 حماية الأدمن",
-                Text = "مفعلة - محمي من أدوات الأدمن",
-                Duration = 3
-            })
-        else
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "👮 حماية الأدمن",
-                Text = "معطلة",
-                Duration = 2
-            })
+                return old(self, ...)
+            end)
+            setreadonly(mt, true)
         end
     end
 })
 
-function setupAntiAdmin()
-    -- منع الأدوات الإدارية
-    game:GetService("RunService").Heartbeat:Connect(function()
-        if antiAdminEnabled and player.Character then
-            -- حماية من التجمد
-            if player.Character:FindFirstChild("Ice") then
-                player.Character.Ice:Destroy()
-            end
-            
-            -- حماية من القيود
-            if player.Character:FindFirstChild("Shackles") then
-                player.Character.Shackles:Destroy()
-            end
-        end
-    end)
-end
-
--- ========================
--- القسم 6: حماية من الأنفجارات
--- ========================
-AntiTab:AddSection({
-    Name = "حماية الأنفجارات"
-})
-
-local antiExplosionEnabled = false
-
+-- حماية التجمد
+local antiFreezeOn = false
 AntiTab:AddToggle({
-    Name = "تفعيل حماية الأنفجارات",
+    Name = "حماية التجمد",
     Default = false,
     Callback = function(state)
-        antiExplosionEnabled = state
+        antiFreezeOn = state
         if state then
-            setupAntiExplosion()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "💥 حماية الأنفجارات",
-                Text = "مفعلة - محمي من الأنفجارات",
-                Duration = 3
-            })
-        else
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "💥 حماية الأنفجارات",
-                Text = "معطلة",
-                Duration = 2
-            })
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if antiFreezeOn and player.Character then
+                    if player.Character:FindFirstChild("Ice") then
+                        player.Character.Ice:Destroy()
+                    end
+                end
+            end)
         end
     end
 })
 
-function setupAntiExplosion()
-    -- إزالة الأنفجارات بالقرب منك
-    local connection = game:GetService("RunService").Heartbeat:Connect(function()
-        if antiExplosionEnabled then
-            for _, obj in pairs(workspace:GetChildren()) do
-                if obj:IsA("Explosion") then
-                    local char = player.Character
-                    if char then
-                        local root = char:FindFirstChild("HumanoidRootPart")
-                        if root and (obj.Position - root.Position).Magnitude < 50 then
+-- حماية السقوط
+local antiFallOn = false
+AntiTab:AddToggle({
+    Name = "حماية السقوط",
+    Default = false,
+    Callback = function(state)
+        antiFallOn = state
+        if state then
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if antiFallOn and player.Character then
+                    local root = player.Character:FindFirstChild("HumanoidRootPart")
+                    if root and root.Position.Y < -100 then
+                        root.CFrame = CFrame.new(0, 50, 0)
+                    end
+                end
+            end)
+        end
+    end
+})
+
+-- حماية الأدمن
+local antiAdminOn = false
+AntiTab:AddToggle({
+    Name = "حماية الأدمن",
+    Default = false,
+    Callback = function(state)
+        antiAdminOn = state
+    end
+})
+
+-- حماية الأنفجارات
+local antiExplosionOn = false
+AntiTab:AddToggle({
+    Name = "حماية الأنفجارات",
+    Default = false,
+    Callback = function(state)
+        antiExplosionOn = state
+        if state then
+            game:GetService("RunService").Heartbeat:Connect(function()
+                if antiExplosionOn then
+                    for _, obj in pairs(workspace:GetChildren()) do
+                        if obj:IsA("Explosion") then
                             obj:Destroy()
                         end
                     end
                 end
-            end
+            end)
         end
-    end)
-end
-
--- ========================
--- القسم 7: حماية إضافية
--- ========================
-AntiTab:AddSection({
-    Name = "حماية إضافية"
+    end
 })
 
-local antiPushEnabled = false
-
+-- حماية الدفع
+local antiPushOn = false
 AntiTab:AddToggle({
-    Name = "تفعيل حماية الدفع",
+    Name = "حماية الدفع",
     Default = false,
     Callback = function(state)
-        antiPushEnabled = state
-        if state then
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "👊 حماية الدفع",
-                Text = "مفعلة - لا يمكن دفعك",
-                Duration = 3
-            })
-        else
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "👊 حماية الدفع",
-                Text = "معطلة",
-                Duration = 2
-            })
-        end
+        antiPushOn = state
     end
 })
 
-local antiStunEnabled = false
-
+-- حماية الصعق
+local antiStunOn = false
 AntiTab:AddToggle({
-    Name = "تفعيل حمية الصعق",
+    Name = "حماية الصعق",
     Default = false,
     Callback = function(state)
-        antiStunEnabled = state
-        if state then
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "⚡ حماية الصعق",
-                Text = "مفعلة - محمي من الصعق",
-                Duration = 3
-            })
-        else
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "⚡ حماية الصعق",
-                Text = "معطلة",
-                Duration = 2
-            })
-        end
+        antiStunOn = state
     end
 })
 
--- ========================
--- القسم 8: أزرار سريعة
--- ========================
-AntiTab:AddSection({
-    Name = "أوامر سريعة"
-})
-
+-- أزرار التحكم
 AntiTab:AddButton({
-    Name = "تفعيل كل الحمايات",
+    Name = "تشغيل الكل",
     Callback = function()
-        antiKickEnabled = true
-        antiFreezeEnabled = true
-        antiFallEnabled = true
-        antiAdminEnabled = true
-        antiExplosionEnabled = true
-        antiPushEnabled = true
-        antiStunEnabled = true
-        
-        setupAntiKick()
-        setupAntiFall()
-        setupAntiAdmin()
-        setupAntiExplosion()
-        
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "🛡️ جميع الحمايات",
-            Text = "تم تفعيل جميع أنظمة الحماية!",
-            Duration = 4
-        })
+        antiKickOn = true
+        antiFreezeOn = true
+        antiFallOn = true
+        antiAdminOn = true
+        antiExplosionOn = true
+        antiPushOn = true
+        antiStunOn = true
     end
 })
 
 AntiTab:AddButton({
-    Name = "إيقاف كل الحمايات",
+    Name = "إيقاف الكل",
     Callback = function()
-        antiKickEnabled = false
-        antiFreezeEnabled = false
-        antiFallEnabled = false
-        antiAdminEnabled = false
-        antiExplosionEnabled = false
-        antiPushEnabled = false
-        antiStunEnabled = false
-        
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "🛡️ جميع الحمايات",
-            Text = "تم إيقاف جميع أنظمة الحماية",
-            Duration = 4
-        })
+        antiKickOn = false
+        antiFreezeOn = false
+        antiFallOn = false
+        antiAdminOn = false
+        antiExplosionOn = false
+        antiPushOn = false
+        antiStunOn = false
     end
 })
 
-AntiTab:AddButton({
-    Name = "اختبار النظام",
-    Callback = function()
-        local protectionCount = 0
-        if antiKickEnabled then protectionCount = protectionCount + 1 end
-        if antiFreezeEnabled then protectionCount = protectionCount + 1 end
-        if antiFallEnabled then protectionCount = protectionCount + 1 end
-        if antiAdminEnabled then protectionCount = protectionCount + 1 end
-        if antiExplosionEnabled then protectionCount = protectionCount + 1 end
-        if antiPushEnabled then protectionCount = protectionCount + 1 end
-        if antiStunEnabled then protectionCount = protectionCount + 1 end
-        
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "🔍 اختبار النظام",
-            Text = "الحمايات المفعلة: " .. protectionCount .. "/7",
-            Duration = 4
-        })
-    end
-})
-
--- ========================
--- القسم 9: إعدادات متقدمة
--- ========================
-AntiTab:AddSection({
-    Name = "إعدادات متقدمة"
-})
-
-AntiTab:AddButton({
-    Name = "إصلاح الشخصية",
-    Callback = function()
-        if player.Character then
-            player.Character:BreakJoints()
-            game.StarterGui:SetCore("SendNotification", {
-                Title = "🔧 إصلاح",
-                Text = "تم إصلاح الشخصية",
-                Duration = 3
-            })
-        end
-    end
-})
-
-AntiTab:AddButton({
-    Name = "إعادة تحميل الشخصية",
-    Callback = function()
-        player.Character:BreakJoints()
-        game.StarterGui:SetCore("SendNotification", {
-            Title = "🔄 إعادة تحميل",
-            Text = "جاري إعادة تحميل الشخصية...",
-            Duration = 3
-        })
-    end
-})
-
--- ========================
--- القسم 10: معلومات الحماية
--- ========================
-AntiTab:AddSection({
-    Name = "معلومات مهمة"
-})
-
-AntiTab:AddLabel("✅ حماية الطرد: تمنع طردك من اللعبة")
-AntiTab:AddLabel("✅ حماية التجمد: تمنع تجميد شخصيتك")
-AntiTab:AddLabel("✅ حماية السقوط: تعيدك إذا وقعت")
-AntiTab:AddLabel("✅ حماية الأدمن: تحميك من أدوات الأدمن")
-AntiTab:AddLabel("✅ حماية الأنفجارات: تزيل الأنفجارات")
-AntiTab:AddLabel("✅ حماية الدفع: تمنع دفعك")
-AntiTab:AddLabel("✅ حماية الصعق: تمنع صعقك")
-
--- ========================
--- القسم 11: حالة النظام
--- ========================
-AntiTab:AddSection({
-    Name = "حالة النظام"
-})
-
-AntiTab:AddLabel("🟢 نظام المضادات: نشط")
-AntiTab:AddLabel("🔒 الحماية: متوفرة")
-AntiTab:AddLabel("📊 الحمايات: 7 أنواع")
-
--- إضافة تحديث للحالة
-task.spawn(function()
-    while true do
-        task.wait(5)
-        local activeCount = 0
-        if antiKickEnabled then activeCount = activeCount + 1 end
-        if antiFreezeEnabled then activeCount = activeCount + 1 end
-        if antiFallEnabled then activeCount = activeCount + 1 end
-        if antiAdminEnabled then activeCount = activeCount + 1 end
-        if antiExplosionEnabled then activeCount = activeCount + 1 end
-        if antiPushEnabled then activeCount = activeCount + 1 end
-        if antiStunEnabled then activeCount = activeCount + 1 end
-        
-        AntiTab:AddLabel("🔐 الحمايات النشطة: " .. activeCount .. "/7")
-    end
-end)
-
--- ========================
--- رسالة النجاح
--- ========================
-task.spawn(function()
-    task.wait(2)
-    AntiTab:AddLabel("🎉 نظام المضادات جاهز للاستخدام!")
-    AntiTab:AddLabel("🛡️ أنت محمي الآن")
-    
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "🛡️ نظام المضادات",
-        Text = "تم تحميل نظام الحماية الكامل!",
-        Duration = 5
-    })
-end)
-
-print("=====================================")
-print("✅ تاب المضادات تم تحميله بنجاح!")
-print("🛡️ 7 أنظمة حماية متكاملة")
-print("🔒 حماية من جميع التهديدات")
-print("=====================================")
+print("مضادات جاهزة")
