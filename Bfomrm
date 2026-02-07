@@ -7130,9 +7130,6 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
--- تاب مضادات خالص
-local player = game.Players.LocalPlayer
-
 local AntiTab = Window:MakeTab({
     Name = "مضادات",
     Icon = "rbxassetid://4483345998"
