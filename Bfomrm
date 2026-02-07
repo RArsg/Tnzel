@@ -7081,7 +7081,7 @@ function startAutoUnban()
     end
 end
 
-local UniversalTab = Window:MakeTab({"مضادات", "plane"})
+local UniversalTab = Window:MakeTab({" مضادات سكربتات من صنعيV1", "plane"})
 
 -- Seção para Scripts Universais
 Section = UniversalTab:AddSection({
@@ -7133,9 +7133,8 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
 -- تاب مضادات خالص
 local player = game.Players.LocalPlayer
 
-local AntiTab = Window:MakeTab({
-    Name = "مضادات",
-    Icon = "rbxassetid://4483345998"
+local UniversalTab = Window:MakeTab({" مضادات سكربتات من صنعيV1", "plane"})
+
 })
 
 -- 1. مضاد الطرد
