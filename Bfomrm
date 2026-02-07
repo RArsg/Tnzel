@@ -7135,9 +7135,8 @@ local player = game.Players.LocalPlayer
 
 local AntiTab = Window:MakeTab({
     Name = "مضادات",
-    Icon = "rbxassetid://76904531459920"
+    Icon = "rbxassetid://4483345998"
 })
-
 -- 1. مضاد الطرد
 local antiKick = false
 AntiTab:AddToggle({
