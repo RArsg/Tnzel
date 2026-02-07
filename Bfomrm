@@ -7130,28 +7130,29 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
  end,
 })
 
-local AntiTab = Window:MakeTab({
+-- هذا هو الكود الوحيد الذي تحتاجه
+local ProtectionTab = Window:MakeTab({
     Name = "مضادات",
-    Icon = "rbxassetid://4483345998"
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
 })
--- 1. مضاد الطرد
-local antiKick = false
-AntiTab:AddToggle({
+
+-- مضاد الطرد
+ProtectionTab:AddToggle({
     Name = "مضاد طرد",
     Default = false,
     Callback = function(state)
-        antiKick = state
         if state then
             local mt = getrawmetatable(game)
             local old = mt.__namecall
             setreadonly(mt, false)
-            mt.__namecall = newcclosure(function(self, ...)
+            mt.__namecall = function(self, ...)
                 local method = getnamecallmethod()
-                if method:lower() == "kick" and antiKick then
+                if method == "Kick" then
                     return nil
                 end
                 return old(self, ...)
-            end)
+            end
             setreadonly(mt, true)
         end
     end
@@ -7230,5 +7231,3 @@ AntiTab:AddToggle({
         end)
     end
 })
-
-print("مضادات مضبوط")
