@@ -7133,7 +7133,9 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-upda
 -- تاب مضادات خالص
 local player = game.Players.LocalPlayer
 
-local AntiTab = Window:MakeTab({ Title = "سكربتات تخريب", Icon = "rbxassetid://13364900349" })
+local AntiTab = Window:MakeTab({
+    Name = "مضادات",
+    Icon = "rbxassetid://76904531459920"
 })
 
 -- 1. مضاد الطرد
