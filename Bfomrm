@@ -7128,50 +7128,47 @@ UniversalTab:AddButton({
   Callback = function()
 loadstring(game:HttpGet(('https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md'),true))()
  end,
-})
+}
 
--- هذا هو الكود الوحيد الذي تحتاجه
 local ProtectionTab = Window:MakeTab({
     Name = "مضادات",
-    Icon = "rbxassetid://4483345998",
-    PremiumOnly = false
+    Icon = "rbxassetid://4483345998"
 })
 
---1. مضاد الطرد
+-- 1. مضاد الطرد
+local antiKickOn = false
 ProtectionTab:AddToggle({
     Name = "مضاد طرد",
     Default = false,
     Callback = function(state)
+        antiKickOn = state
         if state then
             local mt = getrawmetatable(game)
             local old = mt.__namecall
             setreadonly(mt, false)
-            mt.__namecall = function(self, ...)
+            mt.__namecall = newcclosure(function(self, ...)
                 local method = getnamecallmethod()
-                if method == "Kick" then
+                if method == "Kick" and antiKickOn then
                     return nil
                 end
                 return old(self, ...)
-            end
-                     setreadonly(mt, true)
-                   end
-                end
-            end
-        end)
+            end)
+            setreadonly(mt, true)
+        end
     end
 })
 
--- 2. مضاد تجمد
-local antiFreeze = false
-AntiTab:AddToggle({
+-- 2. مضاد التجمد
+local antiFreezeOn = false
+ProtectionTab:AddToggle({
     Name = "مضاد تجمد",
     Default = false,
     Callback = function(state)
-        antiFreeze = state
+        antiFreezeOn = state
         game:GetService("RunService").Heartbeat:Connect(function()
-            if antiFreeze and player.Character then
-                for _, obj in pairs(player.Character:GetChildren()) do
-                    if obj.Name:lower():find("ice") then
+            if antiFreezeOn and game.Players.LocalPlayer.Character then
+                for _, obj in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                    if obj.Name == "Ice" then
                         obj:Destroy()
                     end
                 end
@@ -7180,16 +7177,16 @@ AntiTab:AddToggle({
     end
 })
 
--- 3. مضاد سقوط
-local antiFall = false
-AntiTab:AddToggle({
+-- 3. مضاد السقوط
+local antiFallOn = false
+ProtectionTab:AddToggle({
     Name = "مضاد سقوط",
     Default = false,
     Callback = function(state)
-        antiFall = state
+        antiFallOn = state
         game:GetService("RunService").Heartbeat:Connect(function()
-            if antiFall and player.Character then
-                local root = player.Character:FindFirstChild("HumanoidRootPart")
+            if antiFallOn and game.Players.LocalPlayer.Character then
+                local root = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
                 if root and root.Position.Y < -500 then
                     root.CFrame = CFrame.new(0, 100, 0)
                 end
@@ -7198,16 +7195,16 @@ AntiTab:AddToggle({
     end
 })
 
--- 4. مضاد جلوس
-local antiSit = false
-AntiTab:AddToggle({
+-- 4. مضاد الجلوس
+local antiSitOn = false
+ProtectionTab:AddToggle({
     Name = "مضاد جلوس",
     Default = false,
     Callback = function(state)
-        antiSit = state
+        antiSitOn = state
         game:GetService("RunService").Heartbeat:Connect(function()
-            if antiSit and player.Character then
-                local humanoid = player.Character:FindFirstChild("Humanoid")
+            if antiSitOn and game.Players.LocalPlayer.Character then
+                local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
                 if humanoid then
                     humanoid.Sit = false
                 end
@@ -7216,15 +7213,15 @@ AntiTab:AddToggle({
     end
 })
 
--- 5. مضاد انفجارات
-local antiExplosion = false
-AntiTab:AddToggle({
+-- 5. مضاد الانفجارات
+local antiExplosionOn = false
+ProtectionTab:AddToggle({
     Name = "مضاد انفجارات",
     Default = false,
     Callback = function(state)
-        antiExplosion = state
+        antiExplosionOn = state
         game:GetService("RunService").Heartbeat:Connect(function()
-            if antiExplosion then
+            if antiExplosionOn then
                 for _, obj in pairs(workspace:GetChildren()) do
                     if obj:IsA("Explosion") then
                         obj:Destroy()
